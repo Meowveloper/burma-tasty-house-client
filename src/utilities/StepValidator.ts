@@ -16,7 +16,7 @@ class StepValidator
 
     public static image(image : IStep['image']) : boolean
     {
-        if(image && image instanceof File) return GeneralValidators.isImageByExtension(image.name);
+        if(image && image instanceof File) return GeneralValidators.isImageByExtension(image.name) && GeneralValidators.lessThanOrEqualFileSize(image, 100);
         return true;
     }
 

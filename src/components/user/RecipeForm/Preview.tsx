@@ -10,6 +10,7 @@ interface IProps {
     notPreview?: boolean;
     setShowPreview?: React.Dispatch<React.SetStateAction<boolean>>;
     saveRecipe? : () => void;
+    formLoading : boolean;
 }
 
 export default function Preview(props: IProps) {
@@ -162,13 +163,17 @@ export default function Preview(props: IProps) {
                             onClick={() => {
                                 props.setShowPreview!(false);
                             }}
-                            className="dark:bg-dark-card px-3 py-2 me-3 rounded-small"
+                            className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3"
                         >
                             Back to Form
                         </button>
                     )}
                     {(props.setShowPreview && props.saveRecipe) && (
-                        <button onClick={props.saveRecipe} className="dark:bg-dark-elevate px-3 py-2 rounded-small">Save</button>
+                        <button onClick={props.saveRecipe} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">
+                            {props.formLoading && (<div className="recipe-form-loader m-auto"></div>)}
+                            {!props.formLoading && <span>Save</span>}
+
+                        </button>
                     )}
                 </div>
                 {/* buttons end */}
