@@ -41,17 +41,20 @@ class RecipeValidator {
 
     public static tags(tags : IRecipe['tags']) : boolean 
     {
-        return tags.length > 0;
+        if(tags) return tags.length > 0;
+        else return false; 
     }
 
     public static ingredients(ingredients : IRecipe['ingredients']) : boolean 
     {
-        return ingredients.length >= 3;
+        if(ingredients) return ingredients.length >= 3;
+        else return false;
     }
 
     public static steps(steps : IRecipe['steps']) : boolean
     {
-        return steps.length >= 2;
+        if(steps) return steps.length >= 2;
+        else return false;
     }
 
     public static video(video : IRecipe['video']) : boolean 

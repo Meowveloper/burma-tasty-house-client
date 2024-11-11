@@ -5,7 +5,8 @@ class StepValidator
 {
     public static sequence_number (newNumber : IStep['sequence_number'], oldSteps : IStep[]) : boolean 
     {
-        return (!oldSteps.find((item) => item.sequence_number === newNumber)) && newNumber > 0;
+        if(oldSteps) return (!oldSteps.find((item) => item.sequence_number === newNumber)) && newNumber > 0;
+        return true;
     }
 
     public static description (description : IStep['description']) : boolean

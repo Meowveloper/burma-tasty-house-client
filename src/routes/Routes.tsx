@@ -27,11 +27,11 @@ export default function Routes() {
                 }, 
                 {
                     path : EnumUserRoutes.Login, 
-                    element : <Login/>
+                    element : !authContext.user ? <Login/> : <Navigate to={EnumUserRoutes.Home}></Navigate>
                 }, 
                 {
                     path : EnumUserRoutes.Register, 
-                    element : <Register/>
+                    element : !authContext.user ? <Register/> : <Navigate to={EnumUserRoutes.Home}></Navigate>
                 }
             ]
         }, 
