@@ -22,6 +22,13 @@ class GeneralValidators {
         const fileExtension : string | undefined = fileName.split(".").pop()?.toLowerCase();
         return fileExtension ? allowedExtensions.includes(fileExtension) : false;
     }
+
+
+    public static lessThanOrEqualFileSize (file : File, size : number) 
+    {
+        const fileSizeInMb = file.size / (1024 * 1024);
+        return fileSizeInMb <= size;
+    }
 }
 
 export default GeneralValidators;

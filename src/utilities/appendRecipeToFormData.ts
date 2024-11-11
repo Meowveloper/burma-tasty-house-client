@@ -1,7 +1,8 @@
 import IRecipe from "../types/IRecipe";
 import IStep from "../types/IStep";
 import ITag from "../types/ITag";
-function appendRecipeToFormData (recipe : IRecipe) : FormData {
+import IUser from "../types/IUser";
+function appendRecipeToFormData (recipe : IRecipe, userId : IUser['_id']) : FormData {
         //form data
         const formData = new FormData();
         formData.append("title", recipe.title);
@@ -13,7 +14,7 @@ function appendRecipeToFormData (recipe : IRecipe) : FormData {
         recipe.ingredients.forEach((item) => {
             formData.append('ingredients', item);
         });
-        formData.append("user", "66e057444aa915f7d07ec5c2");
+        formData.append("user", userId);
         if (recipe.steps) {
             const steps: IStep[] = recipe.steps.map(item => ({
                 ...item,

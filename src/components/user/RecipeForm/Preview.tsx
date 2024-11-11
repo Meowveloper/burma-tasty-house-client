@@ -3,14 +3,18 @@ import UserGeneralTags from "../general/Tags";
 import UserGeneralIngredients from "../general/Ingredients";
 import { Icon } from "@iconify/react";
 import IStep from "../../../types/IStep";
+import { useContext } from "react";
+import { AuthContext } from "../../../contexts/AuthContext";
 interface IProps {
     recipe: IRecipe;
     notPreview?: boolean;
     setShowPreview?: React.Dispatch<React.SetStateAction<boolean>>;
     saveRecipe? : () => void;
+    formLoading : boolean;
 }
 
 export default function Preview(props: IProps) {
+    const authContext = useContext(AuthContext);
     return (
         <div>
             <div className="grid grid-cols-12 gap-2">
@@ -65,7 +69,8 @@ export default function Preview(props: IProps) {
                         <div>Post owner - </div>
                         {(!!props.recipe?.user && typeof props.recipe?.user === 'string') && <div className="font-bold text-h3 cursor-pointer">{props.recipe.user}</div>}
                         {(!!props.recipe?.user && typeof props.recipe?.user === 'object') && <div className="font-bold text-h3 cursor-pointer">{props.recipe.user.name}</div>}
-                        {!props.recipe?.user && <div className="dark:text-dark-card">No data...</div>}
+                        { (!props.recipe?.user && authContext.user) && <div className="font-bold text-h3 cursor-pointer">{ authContext.user.name }</div> }
+                        {(!props.recipe?.user && !authContext.user) && <div className="dark:text-dark-card">No data...</div>}
                     </div>
                     <div className="flex items-center gap-2">
                         <div>Preparation Time - </div>
@@ -158,13 +163,17 @@ export default function Preview(props: IProps) {
                             onClick={() => {
                                 props.setShowPreview!(false);
                             }}
-                            className="dark:bg-dark-card px-3 py-2 me-3 rounded-small"
+                            className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3"
                         >
                             Back to Form
                         </button>
                     )}
                     {(props.setShowPreview && props.saveRecipe) && (
-                        <button onClick={props.saveRecipe} className="dark:bg-dark-elevate px-3 py-2 rounded-small">Save</button>
+                        <button onClick={props.saveRecipe} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">
+                            {props.formLoading && (<div className="recipe-form-loader m-auto"></div>)}
+                            {!props.formLoading && <span>Save</span>}
+
+                        </button>
                     )}
                 </div>
                 {/* buttons end */}

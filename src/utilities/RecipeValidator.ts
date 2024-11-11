@@ -15,9 +15,9 @@ class RecipeValidator {
 
     public static image(image : IRecipe['image']) : boolean
     {
-        if(!(image instanceof File)) return false;
+        if(!image || !(image instanceof File)) return false;
         else {
-            return GeneralValidators.isImageByExtension(image.name);
+            return GeneralValidators.isImageByExtension(image.name) && GeneralValidators.lessThanOrEqualFileSize(image, 100);
         }
     }
 
@@ -59,8 +59,8 @@ class RecipeValidator {
 
     public static video(video : IRecipe['video']) : boolean 
     {
-        if(video) {
-           if(video instanceof File) return GeneralValidators.isVideoByExtension(video.name); 
+        if(video && video instanceof File) {
+           if(video instanceof File) return GeneralValidators.isVideoByExtension(video.name) && GeneralValidators.lessThanOrEqualFileSize(video, 200); 
         }
         return true;
     }

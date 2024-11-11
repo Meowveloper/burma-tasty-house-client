@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import UserRecipeForm from "../../components/user/RecipeForm/Index";
 import EnumRecipeFormActions from "../../types/EnumRecipeFormActions";
 import UserRecipeFormPreview from "../../components/user/RecipeForm/Preview";
@@ -8,11 +8,14 @@ import storeObjectInIndexedDB from "../../utilities/storeObjectInIndexDB";
 import getRecipeFromIndexedDB from "../../utilities/getObjectFromIndexDB";
 import appendRecipeToFormData from "../../utilities/appendRecipeToFormData";
 import RecipeValidator from "../../utilities/RecipeValidator";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function UserRecipeCreate() {
+    const authContext = useContext(AuthContext);
     const [showPreview, setShowPreview] = useState<boolean>(false);
 
     const [recipe, setRecipe] = useState<IRecipe>({} as IRecipe);
+    const [ formLoading, setFormLoading ] = useState<boolean>(false);
     // Function to fetch recipe from IndexedDB
     const fetchRecipeFromIndexedDB = () => {
         getRecipeFromIndexedDB(data => {
@@ -39,19 +42,25 @@ export default function UserRecipeCreate() {
             {!showPreview && (
                 <div>
                     <div className="dark:text-dark-text-highlight text-h1">Create Your Own Recipe</div>
-                    <UserRecipeForm saveRecipe={saveRecipe} recipe={recipe} setRecipe={setRecipe} action={EnumRecipeFormActions.Store} setShowPreview={setShowPreview}></UserRecipeForm>
+                    <UserRecipeForm saveRecipe={saveRecipe} recipe={recipe} setRecipe={setRecipe} action={EnumRecipeFormActions.Store} setShowPreview={setShowPreview} formLoading={formLoading}></UserRecipeForm>
                 </div>
             )}
 
-            {showPreview && <UserRecipeFormPreview setShowPreview={setShowPreview} recipe={recipe} saveRecipe={saveRecipe}></UserRecipeFormPreview>}
+            {showPreview && <UserRecipeFormPreview setShowPreview={setShowPreview} recipe={recipe} saveRecipe={saveRecipe} formLoading={formLoading}></UserRecipeFormPreview>}
         </>
     );
 
     function saveRecipe()
     {
+        setFormLoading(true);
         console.log(RecipeValidator.all(recipe, EnumRecipeFormActions.Store));
+        let formData : FormData;
         if(!RecipeValidator.all(recipe, EnumRecipeFormActions.Store)) return;
-        const formData : FormData = appendRecipeToFormData(recipe);
+        if(authContext.user) {
+            formData  = appendRecipeToFormData(recipe, authContext.user._id);
+        } else {
+            return;
+        }
         axios
             .post("/recipes", formData, {
                 headers: {
@@ -60,6 +69,10 @@ export default function UserRecipeCreate() {
             })
             .then(res => {
                 console.log(res);
+            }).catch(e => {
+                console.error(e);
+            }).finally(() => {
+                setFormLoading(false);
             });
     }
 }

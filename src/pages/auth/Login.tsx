@@ -12,6 +12,12 @@ export default function Login()
     const [ normalLoginLoading, setNormalLoginLoading ] = useState<boolean>(false);
     const navigate = useNavigate();
     const authContext = useContext(AuthContext);
+    
+    // useEffect(() => {
+    //     if(authContext.user) {
+    //         navigate(authContext.user.role ? EnumAdminRoutes.Home : EnumUserRoutes.Home);
+    //     }
+    // });
 
     return (
         <div>
