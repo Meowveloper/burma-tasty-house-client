@@ -10,8 +10,11 @@ import { EnumUserRoutes } from '../types/EnumRoutes';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 
+const LoadingScreen = () => <div className='mt-5 ms-5 text-h1 dark:text-dark-text-highlight'>Loading...</div>;
 export default function Routes() {
     const authContext = useContext(AuthContext);
+    if(authContext.loading) return LoadingScreen();
+
     const routes = createBrowserRouter([
         {
             path : '/',
