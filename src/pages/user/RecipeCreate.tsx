@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import UserRecipeForm from "../../components/user/RecipeForm/Index";
 import EnumRecipeFormActions from "../../types/EnumRecipeFormActions";
 import UserRecipeFormPreview from "../../components/user/RecipeForm/Preview";
@@ -8,8 +8,10 @@ import storeObjectInIndexedDB from "../../utilities/storeObjectInIndexDB";
 import getRecipeFromIndexedDB from "../../utilities/getObjectFromIndexDB";
 import appendRecipeToFormData from "../../utilities/appendRecipeToFormData";
 import RecipeValidator from "../../utilities/RecipeValidator";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function UserRecipeCreate() {
+    const authContext = useContext(AuthContext);
     const [showPreview, setShowPreview] = useState<boolean>(false);
 
     const [recipe, setRecipe] = useState<IRecipe>({} as IRecipe);
@@ -50,8 +52,13 @@ export default function UserRecipeCreate() {
     function saveRecipe()
     {
         console.log(RecipeValidator.all(recipe, EnumRecipeFormActions.Store));
+        let formData : FormData;
         if(!RecipeValidator.all(recipe, EnumRecipeFormActions.Store)) return;
-        const formData : FormData = appendRecipeToFormData(recipe);
+        if(authContext.user) {
+            formData  = appendRecipeToFormData(recipe, authContext.user._id);
+        } else {
+            return;
+        }
         axios
             .post("/recipes", formData, {
                 headers: {

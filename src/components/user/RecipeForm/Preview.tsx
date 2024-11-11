@@ -3,6 +3,8 @@ import UserGeneralTags from "../general/Tags";
 import UserGeneralIngredients from "../general/Ingredients";
 import { Icon } from "@iconify/react";
 import IStep from "../../../types/IStep";
+import { useContext } from "react";
+import { AuthContext } from "../../../contexts/AuthContext";
 interface IProps {
     recipe: IRecipe;
     notPreview?: boolean;
@@ -11,6 +13,7 @@ interface IProps {
 }
 
 export default function Preview(props: IProps) {
+    const authContext = useContext(AuthContext);
     return (
         <div>
             <div className="grid grid-cols-12 gap-2">
@@ -65,7 +68,8 @@ export default function Preview(props: IProps) {
                         <div>Post owner - </div>
                         {(!!props.recipe?.user && typeof props.recipe?.user === 'string') && <div className="font-bold text-h3 cursor-pointer">{props.recipe.user}</div>}
                         {(!!props.recipe?.user && typeof props.recipe?.user === 'object') && <div className="font-bold text-h3 cursor-pointer">{props.recipe.user.name}</div>}
-                        {!props.recipe?.user && <div className="dark:text-dark-card">No data...</div>}
+                        { (!props.recipe?.user && authContext.user) && <div className="font-bold text-h3 cursor-pointer">{ authContext.user.name }</div> }
+                        {(!props.recipe?.user && !authContext.user) && <div className="dark:text-dark-card">No data...</div>}
                     </div>
                     <div className="flex items-center gap-2">
                         <div>Preparation Time - </div>
