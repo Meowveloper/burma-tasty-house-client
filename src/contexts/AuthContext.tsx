@@ -1,4 +1,4 @@
-import { createContext, Dispatch, ReactNode, useEffect, useReducer } from "react";
+import { createContext, Dispatch, ReactNode, useEffect, useReducer, useState } from "react";
 import IUser from "../types/IUser";
 import EnumAuthReducerActionTypes from "../types/EnumAuthReducerActionTypes";
 import axios from '../utilities/axios';
@@ -19,11 +19,13 @@ type AuthAction = { type : EnumAuthReducerActionTypes.LoginOrRegister, payload :
 interface AuthContextType extends AuthState 
 {
     dispatch : Dispatch<AuthAction>;
+    loading : boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
     user : null, 
-    dispatch : () => null
+    dispatch : () => null, 
+    loading : true
 });
 
 export const AuthContextProvider = ({ children } : IProps) => {
@@ -38,6 +40,8 @@ export const AuthContextProvider = ({ children } : IProps) => {
         { user : null }
     );
 
+    const [ loading, setLoading ] = useState<boolean>(true);
+
     useEffect(() => {
         console.log('Checking useEffect from AuthContext');
         axios.get('/users/me').then(res => {
@@ -50,8 +54,8 @@ export const AuthContextProvider = ({ children } : IProps) => {
         }).catch(error => {
             console.error(error);
             dispatch({ type : EnumAuthReducerActionTypes.Logout });
-        })
+        }).finally(() => { setLoading(false); });
     }, []);
 
-    return <AuthContext.Provider value={{ ...state, dispatch }}>{ children }</AuthContext.Provider>
+    return <AuthContext.Provider value={{ ...state, dispatch, loading }}>{ children }</AuthContext.Provider>
 };
