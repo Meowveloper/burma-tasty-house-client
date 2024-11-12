@@ -45,7 +45,7 @@ export default function Tab5(props: IProps) {
                 </div>
                 <input onChange={handleVideoChange} type="file" accept="video/*" ref={hiddenVideoInput} className="hidden" />
             </div>
-            {!props.pageStart && !RecipeValidator.video(props.recipe.video) && <span className="text-red-500 font-bold">Video must be in mp4 format and cannot be larger than 200 mb.</span>}
+            {!props.pageStart && !RecipeValidator.video(props.recipe.video) && <span className="text-red-500 font-bold">Video is required and must be in mp4 format and cannot be larger than 100 mb.</span>}
             {!!videoPreviewUrl && (
                 <video className="h-[400px] w-full mb-5" controls>
                     <source src={videoPreviewUrl} type="video/mp4" />

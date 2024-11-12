@@ -30,7 +30,7 @@ export default function Routes() {
                     ),
                 },
                 {
-                    path: EnumUserRoutes.Profile,
+                    path: `${EnumUserRoutes.Profile}/:id`,
                     element: (
                         <ProtectedRoutes>
                             <UserProfile />

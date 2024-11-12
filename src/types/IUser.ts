@@ -1,3 +1,4 @@
+import IRecipe from "./IRecipe";
 
 interface IUser {
     _id : string; 
@@ -6,7 +7,7 @@ interface IUser {
     password : string;
     avatar? : string;
     role : boolean;
-    recipes? : string;
+    recipes? : string[] | IRecipe[];
     comments? : string;
 }
 
