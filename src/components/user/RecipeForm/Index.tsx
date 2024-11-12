@@ -44,6 +44,7 @@ export default function Index(props: IProps) {
                 </div>
                 <div
                     onClick={() => {
+                        console.log('here');
                         setPageStart(true);
                         setTabNumber(3);
                     }}
@@ -53,6 +54,7 @@ export default function Index(props: IProps) {
                 </div>
                 <div
                     onClick={() => {
+                        console.log('here');
                         setPageStart(true);
                         setTabNumber(4);
                     }}
@@ -101,8 +103,26 @@ export default function Index(props: IProps) {
                         Show Preview
                     </button>
                 </div>
+                <div className="mt-4 text-center">
+                    <button onClick={next} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">Next</button>
+                    <button onClick={previous} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small">Previous</button>
+                </div>
                 <div className="bg-transparent mb-4 w-[95%] mx-auto h-[1px]"></div>
             </div>
         </div>
     );
+
+    function next () {
+        setTabNumber(prev => {
+            if(prev !== 5) return (prev + 1) as TTabNumber;
+            else return prev;
+        })
+    }
+
+    function previous () {
+        setTabNumber(prev => {
+            if(prev !== 1) return (prev -1) as TTabNumber;
+            else return prev;
+        })
+    }
 }
