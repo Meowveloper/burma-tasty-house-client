@@ -66,7 +66,7 @@ export default function Tab4(props : IProps) {
                 </div>
             )}
             { (newImage && !StepValidator.image(newImage)) && (
-                <span className="text-red-500 font-bold">Invalid file type. Only jgeg, jpg, png or svg are allowed.</span>
+                <span className="text-red-500 font-bold">Invalid file type. Only jgeg, jpg, png or svg are allowed and must not be larger than 50 mb.</span>
             )}
             <div className="text-center my-5 rounded-small">
                 <button onClick={addStep} className="bg-dark-border w-[155px] h-[44px] rounded-small">Add</button>

@@ -43,7 +43,7 @@ export default function Tab1(props : IProps) {
                 <input onChange={handleImageChange} type="file" accept="image/*" ref={hiddenImageInput} className="hidden" />
                 {
                     (!props.pageStart && !RecipeValidator.image(props.recipe.image)) && (
-                        <span className="text-red-500 font-bold">Only jpg, jpeg, png and svg extension files are allowed!!</span>
+                        <span className="text-red-500 font-bold">Image is required. Only jpg, jpeg, png and svg extension files are allowed and must not be larger than 50mb!!</span>
                     )
                 }
                 { !!imagePreviewUrl && (

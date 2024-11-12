@@ -9,6 +9,8 @@ import getRecipeFromIndexedDB from "../../utilities/getObjectFromIndexDB";
 import appendRecipeToFormData from "../../utilities/appendRecipeToFormData";
 import RecipeValidator from "../../utilities/RecipeValidator";
 import { AuthContext } from "../../contexts/AuthContext";
+import deleteObjectInIndexedDB from "../../utilities/deleteObjectInIndexedDB";
+import { useNavigate } from "react-router-dom";
 
 export default function UserRecipeCreate() {
     const authContext = useContext(AuthContext);
@@ -16,6 +18,7 @@ export default function UserRecipeCreate() {
 
     const [recipe, setRecipe] = useState<IRecipe>({} as IRecipe);
     const [ formLoading, setFormLoading ] = useState<boolean>(false);
+    const navigate = useNavigate();
     // Function to fetch recipe from IndexedDB
     const fetchRecipeFromIndexedDB = () => {
         getRecipeFromIndexedDB(data => {
@@ -67,12 +70,14 @@ export default function UserRecipeCreate() {
                     "Content-Type": "multipart/form-data",
                 },
             })
-            .then(res => {
+            .then(async res => {
                 console.log(res);
+                await deleteObjectInIndexedDB('recipe');
             }).catch(e => {
                 console.error(e);
             }).finally(() => {
                 setFormLoading(false);
+                navigate('/');               
             });
     }
 }

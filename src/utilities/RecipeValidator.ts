@@ -17,7 +17,7 @@ class RecipeValidator {
     {
         if(!image || !(image instanceof File)) return false;
         else {
-            return GeneralValidators.isImageByExtension(image.name) && GeneralValidators.lessThanOrEqualFileSize(image, 100);
+            return GeneralValidators.isImageByExtension(image.name) && GeneralValidators.lessThanOrEqualFileSize(image, 50);
         }
     }
 
@@ -60,9 +60,9 @@ class RecipeValidator {
     public static video(video : IRecipe['video']) : boolean 
     {
         if(video && video instanceof File) {
-           if(video instanceof File) return GeneralValidators.isVideoByExtension(video.name) && GeneralValidators.lessThanOrEqualFileSize(video, 200); 
+           if(video instanceof File) return GeneralValidators.isVideoByExtension(video.name) && GeneralValidators.lessThanOrEqualFileSize(video, 100); 
         }
-        return true;
+        return false;
     }
 
     public static all(recipe : IRecipe, action : EnumRecipeFormActions = EnumRecipeFormActions.Store) : boolean
@@ -85,7 +85,7 @@ class RecipeValidator {
 
         if(!recipe.steps || !this.steps(recipe.steps)) return false;
 
-        if(recipe.video && !this.video(recipe.video)) return false;
+        if(!recipe.video || !this.video(recipe.video)) return false;
 
         return true;
     }

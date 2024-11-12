@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axios from '../../../utilities/axios';
 import EnumAuthReducerActionTypes from "../../../types/EnumAuthReducerActionTypes";
+import { EnumUserRoutes } from "../../../types/EnumRoutes";
 
 export default function NavBar() {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
@@ -49,6 +50,17 @@ export default function NavBar() {
                                 className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
                             >
                                 Create Recipe
+                            </NavLink>
+                        </div>
+                        <div className="ps-5 py-3 border-b border-dark-text">
+                            <NavLink
+                                to={`${EnumUserRoutes.Profile}/${authContext.user?._id}`}
+                                onClick={() => {
+                                    setShowMobileMenu(false);
+                                }}
+                                className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
+                            >
+                                Profile
                             </NavLink>
                         </div>
                     </motion.div>
