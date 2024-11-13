@@ -91,10 +91,19 @@ export default function Tab4(props : IProps) {
 
     function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) : void
     {
-        const file = e.target.files?.[0];
-        if (file) {
-            setImagePreviewUrl(URL.createObjectURL(file));
+        const fileList = e.target.files;
+        if (fileList && fileList.length > 0) {
+            const file = fileList[0];
+            if (file && !StepValidator.image(file)) {
+                console.warn("Invalid file type or size");
+                return;
+            }
+            const imageUrl = URL.createObjectURL(file);
+            setImagePreviewUrl(imageUrl);
             setNewImage(file);
+            e.target.value = "";
+        } else {
+            alert("No file selected or file could not be read.");
         }
     }
 
@@ -111,6 +120,7 @@ export default function Tab4(props : IProps) {
         props.setRecipe((prev : IRecipe) => ({ ...prev, steps : (prev.steps?.length ? [...prev.steps, newStep ] : [ newStep ]) } as IRecipe))
         setNewDescription('');
         setNewImage(undefined);
+        URL.revokeObjectURL(imagePreviewUrl!);
         setImagePreviewUrl(null);
         props.setPageStart(true);
     }
