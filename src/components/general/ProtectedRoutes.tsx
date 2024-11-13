@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { EnumUserRoutes } from "../../types/EnumRoutes";
 
 interface ProtectedRouteProps {
     isAdminRoute?: boolean;
@@ -9,11 +10,13 @@ interface ProtectedRouteProps {
 
 function ProtectedRoutes({ isAdminRoute = false, children }: ProtectedRouteProps) {
     const authContext = useContext(AuthContext);
+    console.log('is admin route', isAdminRoute)
+    console.log( authContext.user?.role? 'admin' : 'user');
 
     if (authContext.loading) return <div>Loading...</div>;
 
     if (!authContext.user) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to={EnumUserRoutes.Login} replace />;
     }
 
     // Check for admin route and user role
