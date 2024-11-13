@@ -89,6 +89,10 @@ export default function Index(props: IProps) {
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: tabNumber === 5 ? 1 : 0, height: tabNumber === 5 ? "auto" : 0 }} transition={{ duration: 0.3 }}>
                     {tabNumber === 5 && <UserRecipeFormTab5 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={pageStart} setPageStart={setPageStart}></UserRecipeFormTab5>}
                 </motion.div>
+                <div className="text-center mb-4">
+                    <button onClick={previous} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">Previous</button>
+                    <button onClick={next} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small">Next</button>
+                </div>
                 <div className="text-center">
                     <button onClick={props.saveRecipe} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">
                         {props.formLoading && (<div className="recipe-form-loader m-auto"></div>)}
@@ -102,10 +106,6 @@ export default function Index(props: IProps) {
                     >
                         Show Preview
                     </button>
-                </div>
-                <div className="mt-4 text-center">
-                    <button onClick={next} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">Next</button>
-                    <button onClick={previous} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small">Previous</button>
                 </div>
                 <div className="bg-transparent mb-4 w-[95%] mx-auto h-[1px]"></div>
             </div>

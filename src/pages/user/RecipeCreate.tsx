@@ -58,7 +58,10 @@ export default function UserRecipeCreate() {
         setFormLoading(true);
         console.log(RecipeValidator.all(recipe, EnumRecipeFormActions.Store));
         let formData : FormData;
-        if(!RecipeValidator.all(recipe, EnumRecipeFormActions.Store)) return;
+        if(!RecipeValidator.all(recipe, EnumRecipeFormActions.Store)) {
+            setFormLoading(false);
+            return;
+        };
         if(authContext.user) {
             formData  = appendRecipeToFormData(recipe, authContext.user._id);
         } else {
