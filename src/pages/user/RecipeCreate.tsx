@@ -18,6 +18,7 @@ export default function UserRecipeCreate() {
 
     const [recipe, setRecipe] = useState<IRecipe>({} as IRecipe);
     const [ formLoading, setFormLoading ] = useState<boolean>(false);
+    const [ pageStart, setPageStart ] = useState<boolean>(true);
     const navigate = useNavigate();
     // Function to fetch recipe from IndexedDB
     const fetchRecipeFromIndexedDB = () => {
@@ -45,7 +46,7 @@ export default function UserRecipeCreate() {
             {!showPreview && (
                 <div>
                     <div className="dark:text-dark-text-highlight text-h1">Create Your Own Recipe</div>
-                    <UserRecipeForm saveRecipe={saveRecipe} recipe={recipe} setRecipe={setRecipe} action={EnumRecipeFormActions.Store} setShowPreview={setShowPreview} formLoading={formLoading}></UserRecipeForm>
+                    <UserRecipeForm saveRecipe={saveRecipe} recipe={recipe} setRecipe={setRecipe} action={EnumRecipeFormActions.Store} setShowPreview={setShowPreview} formLoading={formLoading} pageStart={pageStart} setPageStart={setPageStart}></UserRecipeForm>
                 </div>
             )}
 
@@ -59,6 +60,7 @@ export default function UserRecipeCreate() {
         console.log(RecipeValidator.all(recipe, EnumRecipeFormActions.Store));
         let formData : FormData;
         if(!RecipeValidator.all(recipe, EnumRecipeFormActions.Store)) {
+            setPageStart(false);
             setFormLoading(false);
             return;
         };

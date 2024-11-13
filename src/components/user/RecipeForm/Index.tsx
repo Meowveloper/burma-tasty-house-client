@@ -16,78 +16,59 @@ interface IProps {
     setRecipe: React.Dispatch<React.SetStateAction<IRecipe>>;
     saveRecipe: () => void;
     formLoading: boolean;
+    pageStart : boolean;
+    setPageStart : React.Dispatch<React.SetStateAction<boolean>>;
 }
 export default function Index(props: IProps) {
     const [tabNumber, setTabNumber] = useState<TTabNumber>(1);
-    const [pageStart, setPageStart] = useState<boolean>(true);
 
     return (
         <div>
             <div className="dark:bg-dark-elevate py-3 rounded-normal flex w-full justify-between px-9 mt-5 ">
                 <div
-                    onClick={() => {
-                        setPageStart(true);
-                        setTabNumber(1);
-                    }}
                     className={`${tabNumber === 1 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}
                 >
                     1
                 </div>
                 <div
-                    onClick={() => {
-                        setPageStart(true);
-                        setTabNumber(2);
-                    }}
                     className={`${tabNumber === 2 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}
                 >
                     2
                 </div>
                 <div
-                    onClick={() => {
-                        console.log('here');
-                        setPageStart(true);
-                        setTabNumber(3);
-                    }}
                     className={`${tabNumber === 3 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}
                 >
                     3
                 </div>
                 <div
-                    onClick={() => {
-                        console.log('here');
-                        setPageStart(true);
-                        setTabNumber(4);
-                    }}
                     className={`${tabNumber === 4 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}
                 >
+
                     4
                 </div>
                 <div
-                    onClick={() => {
-                        setPageStart(true);
-                        setTabNumber(5);
-                    }}
                     className={`${tabNumber === 5 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}
                 >
+
                     5
                 </div>
             </div>
 
             <div className="dark:bg-dark-secondary-card mt-5 p-3 rounded-normal">
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: tabNumber === 1 ? 1 : 0, height: tabNumber === 1 ? "auto" : 0 }} transition={{ duration: 0.3 }}>
-                    {tabNumber === 1 && <UserRecipeFormTab1 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={pageStart} setPageStart={setPageStart}></UserRecipeFormTab1>}
+                    {tabNumber === 1 && <UserRecipeFormTab1 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={props.pageStart} setPageStart={props.setPageStart}></UserRecipeFormTab1>}
                 </motion.div>
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: tabNumber === 2 ? 1 : 0, height: tabNumber === 2 ? "auto" : 0 }} transition={{ duration: 0.3 }}>
-                    {tabNumber === 2 && <UserRecipeFormTab2 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={pageStart} setPageStart={setPageStart}></UserRecipeFormTab2>}
+                    {tabNumber === 2 && <UserRecipeFormTab2 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={props.pageStart} setPageStart={props.setPageStart}></UserRecipeFormTab2>}
                 </motion.div>
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: tabNumber === 3 ? 1 : 0, height: tabNumber === 3 ? "auto" : 0 }} transition={{ duration: 0.3 }}>
-                    {tabNumber === 3 && <UserRecipeFormTab3 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={pageStart} setPageStart={setPageStart}></UserRecipeFormTab3>}
+                    {tabNumber === 3 && <UserRecipeFormTab3 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={props.pageStart} setPageStart={props.setPageStart}></UserRecipeFormTab3>}
                 </motion.div>
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: tabNumber === 4 ? 1 : 0, height: tabNumber === 4 ? "auto" : 0 }} transition={{ duration: 0.3 }}>
-                    {tabNumber === 4 && <UserRecipeFormTab4 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={pageStart} setPageStart={setPageStart}></UserRecipeFormTab4>}
+                    {tabNumber === 4 && <UserRecipeFormTab4 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={props.pageStart} setPageStart={props.setPageStart}></UserRecipeFormTab4>}
                 </motion.div>
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: tabNumber === 5 ? 1 : 0, height: tabNumber === 5 ? "auto" : 0 }} transition={{ duration: 0.3 }}>
-                    {tabNumber === 5 && <UserRecipeFormTab5 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={pageStart} setPageStart={setPageStart}></UserRecipeFormTab5>}
+                    {tabNumber === 5 && <UserRecipeFormTab5 recipe={props.recipe} setRecipe={props.setRecipe} pageStart={props.pageStart} setPageStart={props.setPageStart}></UserRecipeFormTab5>}
                 </motion.div>
                 <div className="text-center mb-4">
                     <button onClick={previous} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">Previous</button>
