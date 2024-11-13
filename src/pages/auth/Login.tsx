@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import EnumAuthReducerActionTypes from "../../types/EnumAuthReducerActionTypes";
+import { EnumUserRoutes } from "../../types/EnumRoutes";
 
 export default function Login()
 {
@@ -63,7 +64,7 @@ export default function Login()
                 authContext.dispatch({ type : EnumAuthReducerActionTypes.LoginOrRegister, payload : res.data.data });
                 setEmail('');
                 setPassword('');
-                navigate('/');
+                navigate(EnumUserRoutes.Home);
             }
         }).catch(err => {
             console.log(err);

@@ -1,5 +1,5 @@
 export enum EnumUserRoutes {
-    Home = '', 
+    Home = '/', 
     RecipeCreate = '/recipe-create', 
     Login = '/auth/login', 
     Register = '/auth/register', 

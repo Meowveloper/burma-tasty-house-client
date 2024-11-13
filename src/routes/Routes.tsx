@@ -37,6 +37,14 @@ export default function Routes() {
                         </ProtectedRoutes>
                     ),
                 },
+                {
+                    path: "*",
+                    element: (
+                        <ProtectedRoutes>
+                            <UserHome></UserHome>
+                        </ProtectedRoutes>
+                    ),
+                },
             ],
         },
         {
@@ -51,23 +59,31 @@ export default function Routes() {
                         </ProtectedRoutes>
                     ),
                 },
+                {
+                    path: "*",
+                    element: (
+                        <ProtectedRoutes isAdminRoute={true}>
+                            <UserHome></UserHome>
+                        </ProtectedRoutes>
+                    ),
+                },
             ],
         },
         {
             path: EnumUserRoutes.Login,
-            element : (
+            element: (
                 <UnauthenticatedRoutes>
                     <Login></Login>
                 </UnauthenticatedRoutes>
-            )
+            ),
         },
         {
             path: EnumUserRoutes.Register,
-            element : (
+            element: (
                 <UnauthenticatedRoutes>
                     <Register></Register>
                 </UnauthenticatedRoutes>
-            )
+            ),
         },
     ]);
 
