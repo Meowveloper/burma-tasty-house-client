@@ -3,7 +3,7 @@ import IRecipe from "../../../types/IRecipe";
 import UserGeneralTags from "../general/Tags";
 import GeneralValidators from "../../../utilities/GeneralValidators";
 import RecipeValidator from "../../../utilities/RecipeValidator";
-import updateObjectFields from "../../../utilities/updateRecipeField";
+import updateObjectFields from "../../../utilities/updateObjectFields";
 interface IProps {
     recipe: IRecipe;
     setRecipe: React.Dispatch<React.SetStateAction<IRecipe>>;
@@ -12,6 +12,7 @@ interface IProps {
 }
 export default function Tab2(props: IProps) {
     const [newTag, setNewTag] = useState<string>("");
+    const updateRecipeTags = updateObjectFields(props.recipe)("tags");
     return (
         <div>
             <div className="text-h2 font-bold mt-3 text-center">
@@ -42,7 +43,7 @@ export default function Tab2(props: IProps) {
     function addTag() {
         if (!GeneralValidators.isText(newTag) || !GeneralValidators.greaterThanOrEqualTextLength(newTag, 2)) return;
         const newTags = props.recipe.tags ? [...props.recipe.tags, newTag] : [newTag];
-        props.setRecipe(updateObjectFields(props.recipe, "tags", newTags));
+        props.setRecipe(updateRecipeTags(newTags));
         setNewTag("");
         props.setPageStart(true);
     }
@@ -52,7 +53,7 @@ export default function Tab2(props: IProps) {
     }
     function removeTag(id: string | number) {
         const updatedTags = filterTags(props.recipe.tags, id);
-        props.setRecipe(updateObjectFields(props.recipe, "tags", updatedTags));
+        props.setRecipe(updateRecipeTags(updatedTags));
     }
 
     function filterTags(tags: IRecipe['tags'], id: string | number): IRecipe['tags'] {

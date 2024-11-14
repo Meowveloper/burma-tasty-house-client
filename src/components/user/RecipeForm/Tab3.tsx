@@ -3,7 +3,7 @@ import IRecipe from "../../../types/IRecipe";
 import UserGeneralIngredients from "../general/Ingredients";
 import GeneralValidators from "../../../utilities/GeneralValidators";
 import RecipeValidator from "../../../utilities/RecipeValidator";
-import updateObjectFields from "../../../utilities/updateRecipeField";
+import updateObjectFields from "../../../utilities/updateObjectFields";
 interface IProps {
     recipe: IRecipe;
     setRecipe: React.Dispatch<SetStateAction<IRecipe>>;
@@ -13,6 +13,8 @@ interface IProps {
 export default function Tab3(props: IProps) {
     const [newIngredient, setNewIngredient] = useState<string>("");
     const inputTag = useRef<HTMLInputElement>(null);
+    const updateRecipeIngredients = updateObjectFields(props.recipe)("ingredients")
+        
     return (
         <div>
             <div className="text-h2 font-bold mt-3 text-center">
@@ -47,14 +49,14 @@ export default function Tab3(props: IProps) {
     function addIngredient() {
         if (!GeneralValidators.isText(newIngredient) || !GeneralValidators.greaterThanOrEqualTextLength(newIngredient, 3)) return;
         const updatedIngredients: IRecipe["ingredients"] = addIngredients(props.recipe.ingredients || [], newIngredient);
-        props.setRecipe(updateObjectFields(props.recipe, "ingredients", updatedIngredients));
+        props.setRecipe(updateRecipeIngredients(updatedIngredients));
         setNewIngredient("");
         props.setPageStart(true);
     }
 
     function removeIngredients(id: number) {
         const updatedIngredients: IRecipe["ingredients"] = filterIngredients(props.recipe.ingredients, id);
-        props.setRecipe(updateObjectFields(props.recipe, "ingredients", updatedIngredients));
+        props.setRecipe(updateRecipeIngredients(updatedIngredients));
     }
 }
 

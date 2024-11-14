@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import IRecipe from "../../../types/IRecipe";
 import RecipeValidator from "../../../utilities/RecipeValidator";
-import updateObjectFields from "../../../utilities/updateRecipeField";
+import updateObjectFields from "../../../utilities/updateObjectFields";
 import getFileUrl from "../../../utilities/getFileUrl";
 
 interface IProps {
@@ -13,6 +13,7 @@ interface IProps {
 export default function Tab1(props: IProps) {
     const hiddenImageInput = useRef<HTMLInputElement>(null);
     const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(() => getFileUrl(props.recipe.image));
+    const updateRecipeFields = updateObjectFields(props.recipe);
 
     useEffect(() => {
         console.log('checking infinite loop from components/user/RecipeForm/Tab1.tsx');
@@ -83,7 +84,7 @@ export default function Tab1(props: IProps) {
 
     function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
         props.setPageStart(false);
-        props.setRecipe(updateObjectFields(props.recipe, "title", e.target.value));
+        props.setRecipe(updateRecipeFields("title")(e.target.value));
     }
 
     function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -94,7 +95,7 @@ export default function Tab1(props: IProps) {
         if (fileList && fileList.length > 0) {
             const file = fileList[0];
             if (file && RecipeValidator.image(file)) {
-                props.setRecipe(updateObjectFields(props.recipe, "image", file))
+                props.setRecipe(updateRecipeFields("image")(file));
             }
         } else {
             alert("No file selected or file could not be read.");
@@ -103,16 +104,16 @@ export default function Tab1(props: IProps) {
 
     function handleDescriptionChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         props.setPageStart(false);
-        props.setRecipe(updateObjectFields(props.recipe, "description", e.target.value));
+        props.setRecipe(updateRecipeFields("description")(e.target.value));
     }
 
     function handlePreparationTimeChange(e: React.ChangeEvent<HTMLInputElement>) {
         props.setPageStart(false);
-        props.setRecipe( updateObjectFields( props.recipe, "preparation_time", Number(e.target.value) ) );
+        props.setRecipe(updateRecipeFields("preparation_time")(Number(e.target.value)));
     }
 
     function handleDifficultyLevelChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        props.setRecipe( updateObjectFields( props.recipe, "difficulty_level", Number(e.target.value) ) );
+        props.setRecipe(updateRecipeFields("difficulty_level")(Number(e.target.value)));
     }
 
 }

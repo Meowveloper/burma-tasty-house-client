@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import IRecipe from "../../../types/IRecipe";
 import RecipeValidator from "../../../utilities/RecipeValidator";
+import getFileUrl from "../../../utilities/getFileUrl";
+import updateObjectFields from "../../../utilities/updateObjectFields";
 
 interface IProps {
     recipe: IRecipe;
@@ -12,11 +14,18 @@ interface IProps {
 export default function Tab5(props: IProps) {
     const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
     const hiddenVideoInput = useRef<HTMLInputElement>(null);
+    const updateRecipeVideo = updateObjectFields(props.recipe)("video");
 
     useEffect(() => {
+
         console.log("Checking the infinite loop from components/user/RecipeForm/Tab5");
-        if (props.recipe.video && props.recipe.video instanceof File) {
-            setVideoPreviewUrl(URL.createObjectURL(props.recipe.video));
+        const previewUrl = getFileUrl(props.recipe.video);
+        setVideoPreviewUrl(previewUrl);
+
+        return () => {
+            if(props.recipe.video instanceof File) {
+                URL.revokeObjectURL(previewUrl || "");
+            }
         }
     }, [props.recipe.video]);
 
@@ -27,7 +36,7 @@ export default function Tab5(props: IProps) {
                 URL.revokeObjectURL(videoPreviewUrl);
             }
         };
-    }, [videoPreviewUrl])
+    }, [videoPreviewUrl]);
 
     return (
         <div>
@@ -62,7 +71,7 @@ export default function Tab5(props: IProps) {
             // Clear the current video preview URL (this ensures that the old URL is removed before setting a new one)
             setVideoPreviewUrl(null);
 
-            props.setRecipe((prev: IRecipe) => ({ ...prev, video: file }));
+            props.setRecipe(updateRecipeVideo(file));
 
             props.setPageStart(false);
         }

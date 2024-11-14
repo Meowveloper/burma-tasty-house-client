@@ -10,7 +10,7 @@ interface IProps {
     notPreview?: boolean;
     setShowPreview?: React.Dispatch<React.SetStateAction<boolean>>;
     saveRecipe? : () => void;
-    formLoading : boolean;
+    formLoading? : boolean;
 }
 
 export default function Preview(props: IProps) {
