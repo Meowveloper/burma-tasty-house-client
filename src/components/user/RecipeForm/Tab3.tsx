@@ -3,6 +3,7 @@ import IRecipe from "../../../types/IRecipe";
 import UserGeneralIngredients from "../general/Ingredients";
 import GeneralValidators from "../../../utilities/GeneralValidators";
 import RecipeValidator from "../../../utilities/RecipeValidator";
+import updateObjectFields from "../../../utilities/updateRecipeField";
 interface IProps {
     recipe: IRecipe;
     setRecipe: React.Dispatch<SetStateAction<IRecipe>>;
@@ -24,7 +25,10 @@ export default function Tab3(props: IProps) {
                         props.setPageStart(false);
                         setNewIngredient(e.target.value);
                     }}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => { if(e.key === 'Enter') addIngredient(); else return; }}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                        if (e.key === "Enter") addIngredient();
+                        else return;
+                    }}
                     value={newIngredient}
                     type="text"
                     className="dark:bg-dark-card rounded-small flex-1 px-3 py-2 outline-none"
@@ -33,29 +37,33 @@ export default function Tab3(props: IProps) {
                     +
                 </div>
             </div>
-            { (!props.pageStart && (!GeneralValidators.isText(newIngredient) || !GeneralValidators.greaterThanOrEqualTextLength(newIngredient, 3))) && (
-                <span className="text-red-500 font-bold">Each ingredient must have at least 3 characters and one alphabetic character!</span>
-            )}
+            {!props.pageStart && (!GeneralValidators.isText(newIngredient) || !GeneralValidators.greaterThanOrEqualTextLength(newIngredient, 3)) && <span className="text-red-500 font-bold">Each ingredient must have at least 3 characters and one alphabetic character!</span>}
             <div className="mt-3">{!!props.recipe.ingredients?.length && <UserGeneralIngredients ingredients={props.recipe.ingredients} removeIngredients={removeIngredients}></UserGeneralIngredients>}</div>
-            {!RecipeValidator.ingredients(props.recipe.ingredients) && (
-                <span className="text-red-500 font-bold">Must contain al least 3 ingredients.</span>
-            )}
+            {!RecipeValidator.ingredients(props.recipe.ingredients) && <span className="text-red-500 font-bold">Must contain al least 3 ingredients.</span>}
             <div className="bg-transparent my-5 w-[95%] mx-auto h-[1px]"></div>
         </div>
     );
 
-    function addIngredient()
-    {
+    function addIngredient() {
         if (!GeneralValidators.isText(newIngredient) || !GeneralValidators.greaterThanOrEqualTextLength(newIngredient, 3)) return;
-        props.setRecipe((prev: IRecipe) => ({ ...prev, ingredients: prev.ingredients ? [...prev.ingredients, newIngredient] : [newIngredient] }));
+        const updatedIngredients: IRecipe["ingredients"] = addIngredients(props.recipe.ingredients || [], newIngredient);
+        props.setRecipe(updateObjectFields(props.recipe, "ingredients", updatedIngredients));
         setNewIngredient("");
         props.setPageStart(true);
     }
 
-    function removeIngredients (id : number)
-    {
-        const newIngredients = props.recipe.ingredients.filter((item, i) => { if(item) return i !== id; });
-        props.setRecipe((prev) => ({ ...prev, ingredients : newIngredients}));
-
+    function removeIngredients(id: number) {
+        const updatedIngredients: IRecipe["ingredients"] = filterIngredients(props.recipe.ingredients, id);
+        props.setRecipe(updateObjectFields(props.recipe, "ingredients", updatedIngredients));
     }
+}
+
+
+// helper functions that does not need to use state (outside of the component function)
+function filterIngredients(ingredients: IRecipe["ingredients"], id: number): IRecipe["ingredients"] {
+    return ingredients.filter((_, index) => index !== id);
+}
+
+function addIngredients(ingredients : IRecipe['ingredients'], newIngredient : string) : IRecipe['ingredients'] {
+    return [...ingredients, newIngredient];
 }

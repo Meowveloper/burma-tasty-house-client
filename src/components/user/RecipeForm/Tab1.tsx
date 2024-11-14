@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import IRecipe from "../../../types/IRecipe";
 import RecipeValidator from "../../../utilities/RecipeValidator";
+import updateObjectFields from "../../../utilities/updateRecipeField";
+import getFileUrl from "../../../utilities/getFileUrl";
+
 interface IProps {
     recipe: IRecipe;
     setRecipe: React.Dispatch<React.SetStateAction<IRecipe>>;
@@ -9,13 +12,16 @@ interface IProps {
 }
 export default function Tab1(props: IProps) {
     const hiddenImageInput = useRef<HTMLInputElement>(null);
-    const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+    const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(() => getFileUrl(props.recipe.image));
 
     useEffect(() => {
-        if (props.recipe.image && props.recipe.image instanceof File) {
-            setImagePreviewUrl(URL.createObjectURL(props.recipe.image));
-        } else if (props.recipe.image && typeof props.recipe.image === "string") {
-            setImagePreviewUrl(props.recipe.image);
+        console.log('checking infinite loop from components/user/RecipeForm/Tab1.tsx');
+        const previewUrl = getFileUrl(props.recipe.image); // added to avoid adding imagePreviewUrl to dependency array
+        setImagePreviewUrl(previewUrl);
+        return function () {
+            if(props.recipe.image instanceof File) {
+                URL.revokeObjectURL(previewUrl || "");
+            }
         }
     }, [props.recipe.image]);
 
@@ -64,16 +70,9 @@ export default function Tab1(props: IProps) {
             <div className="mt-3">
                 <div className="px-1 font-bold text-h3">Difficulty Level</div>
                 <select onChange={handleDifficultyLevelChange} value={props.recipe.difficulty_level || "1"} className="dark:bg-dark-card rounded-small w-full px-3 py-2 outline-none">
-                    <option value="1">1/10</option>
-                    <option value="2">2/10</option>
-                    <option value="3">3/10</option>
-                    <option value="4">4/10</option>
-                    <option value="5">5/10</option>
-                    <option value="6">6/10</option>
-                    <option value="7">7/10</option>
-                    <option value="8">8/10</option>
-                    <option value="9">9/10</option>
-                    <option value="10">10/10</option>
+                    {[...Array(10)].map((_, i) => (
+                        <option key={i} value={i + 1}>{i + 1}/10</option>
+                    ))}
                 </select>
                 {!props.pageStart && !RecipeValidator.difficulty_level(props.recipe.difficulty_level) && <span className="text-red-500 font-bold">Something went wrong!!</span>}
             </div>
@@ -81,26 +80,22 @@ export default function Tab1(props: IProps) {
         </div>
     );
 
+
     function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
         props.setPageStart(false);
-        props.setRecipe((prev: IRecipe) => ({ ...prev, title: e.target.value }));
+        props.setRecipe(updateObjectFields(props.recipe, "title", e.target.value));
     }
 
     function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
         props.setPageStart(false);
+
         const fileList = e.target.files;
+
         if (fileList && fileList.length > 0) {
             const file = fileList[0];
-            if (file && !RecipeValidator.image(file)) {
-                console.warn("Invalid file type or size");
-                return;
+            if (file && RecipeValidator.image(file)) {
+                props.setRecipe(updateObjectFields(props.recipe, "image", file))
             }
-            const imageUrl = URL.createObjectURL(file);
-            setImagePreviewUrl(imageUrl);
-            props.setRecipe((prev: IRecipe) => ({ ...prev, image: file }));
-
-            URL.revokeObjectURL(imageUrl);
-            e.target.value = "";
         } else {
             alert("No file selected or file could not be read.");
         }
@@ -108,21 +103,16 @@ export default function Tab1(props: IProps) {
 
     function handleDescriptionChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         props.setPageStart(false);
-        props.setRecipe((prev: IRecipe) => ({ ...prev, description: e.target.value }));
+        props.setRecipe(updateObjectFields(props.recipe, "description", e.target.value));
     }
 
     function handlePreparationTimeChange(e: React.ChangeEvent<HTMLInputElement>) {
         props.setPageStart(false);
-        props.setRecipe((prev: IRecipe) => ({
-            ...prev,
-            preparation_time: Number(e.target.value),
-        }));
+        props.setRecipe( updateObjectFields( props.recipe, "preparation_time", Number(e.target.value) ) );
     }
 
     function handleDifficultyLevelChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        props.setRecipe((prev: IRecipe) => ({
-            ...prev,
-            difficulty_level: Number(e.target.value),
-        }));
+        props.setRecipe( updateObjectFields( props.recipe, "difficulty_level", Number(e.target.value) ) );
     }
+
 }
