@@ -18,7 +18,7 @@ function appendRecipeToFormData (recipe : IRecipe, userId : IUser['_id']) : Form
         if (recipe.steps) {
             const steps: IStep[] = recipe.steps.map(item => ({
                 ...item,
-                image: item.image instanceof File ? undefined : item.image,
+                image: item.image instanceof File ? null : item.image,
             }));
             steps.forEach(item => {
                 formData.append('steps', JSON.stringify(item));
