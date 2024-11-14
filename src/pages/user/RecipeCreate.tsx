@@ -41,6 +41,8 @@ export default function UserRecipeCreate() {
         storeObjectInIndexedDB(recipe);
     }, [recipe]); // this useEffect is for updating the recipe in the indexDB every time the recipe changes
 
+    const PreviewWithRecipeAndSetShowPreviewAndSaveRecipeAndFormLoading = UserRecipeFormPreview(recipe)()(setShowPreview)(saveRecipe)(formLoading)(authContext.user);
+
     return (
         <>
             {!showPreview && (
@@ -50,7 +52,7 @@ export default function UserRecipeCreate() {
                 </div>
             )}
 
-            {showPreview && <UserRecipeFormPreview setShowPreview={setShowPreview} recipe={recipe} saveRecipe={saveRecipe} formLoading={formLoading}></UserRecipeFormPreview>}
+            {showPreview && PreviewWithRecipeAndSetShowPreviewAndSaveRecipeAndFormLoading}
         </>
     );
 

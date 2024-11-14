@@ -3,6 +3,8 @@ import IRecipe from "../../../types/IRecipe";
 import IStep from "../../../types/IStep";
 import StepValidator from "../../../utilities/StepValidator";
 import RecipeValidator from "../../../utilities/RecipeValidator";
+import updateObjectFields from "../../../utilities/updateObjectFields";
+import getFileUrl from "../../../utilities/getFileUrl";
 
 interface IProps {
     recipe : IRecipe;
@@ -13,19 +15,27 @@ interface IProps {
 export default function Tab4(props : IProps) {
     const hiddenImageInput = useRef<HTMLInputElement>(null);
     const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-    const [ newSequenceNumber , setNewSequenceNumber ] = useState<number>(() => {
-        return props.recipe.steps?.length ? props.recipe.steps.slice().sort((a, b) => a.sequence_number - b.sequence_number)[props.recipe.steps.length - 1].sequence_number + 1 : 1; // sort and plus one to the latest sequence number
-    }); 
+    const [ newSequenceNumber , setNewSequenceNumber ] = useState<number>(calculateNewSequenceNumber(props.recipe.steps)); 
+    const [ newDescription, setNewDescription ] = useState<string>('');
+    const [ newImage, setNewImage ] = useState<File | string | null>(null);
+    const updateRecipeSteps = updateObjectFields(props.recipe)("steps");
 
     useEffect(() => {
         console.log('checking infinite loop from components/user/RecipeForm/Tab4');
-        setNewSequenceNumber(() => {
-            return props.recipe.steps?.length ? props.recipe.steps.slice().sort((a, b) => a.sequence_number - b.sequence_number)[props.recipe.steps.length - 1].sequence_number + 1 : 1; // sort and plus one to the latest sequence number
-        })
+        setNewSequenceNumber(calculateNewSequenceNumber(props.recipe.steps));
     }, [ props.recipe.steps ]);
 
-    const [ newDescription, setNewDescription ] = useState<string>('');
-    const [ newImage, setNewImage ] = useState<File | string | undefined>(undefined);
+    useEffect(() => {
+        console.log('checking infinite loop from second useEffect of components/user/RecipeForm/Tab4');
+        const previewUrl = getFileUrl(newImage);
+        setImagePreviewUrl(previewUrl);
+        return function () {
+            if(newImage instanceof File) {
+                URL.revokeObjectURL(previewUrl || "");
+            }
+        }
+    }, [ newImage ]);
+
     return (
         <div>
             <div className="text-h2 mb-5 font-bold mt-3 text-center">
@@ -98,8 +108,6 @@ export default function Tab4(props : IProps) {
                 console.warn("Invalid file type or size");
                 return;
             }
-            const imageUrl = URL.createObjectURL(file);
-            setImagePreviewUrl(imageUrl);
             setNewImage(file);
             e.target.value = "";
         } else {
@@ -117,18 +125,30 @@ export default function Tab4(props : IProps) {
         }
         if(!StepValidator.all(newStep, props.recipe.steps)) return;
         
-        props.setRecipe((prev : IRecipe) => ({ ...prev, steps : (prev.steps?.length ? [...prev.steps, newStep ] : [ newStep ]) } as IRecipe))
+        const newSteps = addStepToArray(newStep, props.recipe.steps);
+        props.setRecipe(updateRecipeSteps(newSteps));
         setNewDescription('');
-        setNewImage(undefined);
-        URL.revokeObjectURL(imagePreviewUrl!);
-        setImagePreviewUrl(null);
+        setNewImage(null);
         props.setPageStart(true);
     }
 
     function removeStep (sequence_number : number) : void 
     {
-        const newSteps = props.recipe.steps.filter((item) => item.sequence_number !== sequence_number);
-        props.setRecipe((prev : IRecipe) => ({ ...prev, steps : newSteps as IRecipe['steps'] }));
+        const newSteps = removeStepFromArray(sequence_number, props.recipe.steps);
+        props.setRecipe(updateRecipeSteps(newSteps));
     }
 
+}
+
+function calculateNewSequenceNumber (steps : IRecipe['steps']) : number {
+    if(!steps?.length) return 1;
+    return steps[steps.length - 1].sequence_number + 1;
+}
+
+function addStepToArray(newStep : IStep, oldSteps : IRecipe['steps']) : IRecipe['steps'] {
+    return [...oldSteps, newStep]; 
+}
+
+function removeStepFromArray(sequenceNumber: IStep['sequence_number'], steps: IRecipe['steps']): IRecipe['steps'] {
+  return steps.filter((item) => item.sequence_number !== sequenceNumber);
 }
