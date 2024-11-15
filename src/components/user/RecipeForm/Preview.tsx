@@ -71,8 +71,7 @@ export default function Preview(recipe: IRecipe) {
                                         <div className="flex items-center gap-2">
                                             <div>Post owner - </div>
                                             {!!recipe?.user && typeof recipe?.user === "string" && <div className="font-bold text-h3 cursor-pointer">{recipe.user}</div>}
-                                            {!!recipe?.user && typeof recipe?.user === "object" && <div className="font-bold text-h3 cursor-pointer">{recipe.user.name}</div>}
-                                            {!recipe?.user && user && <div className="font-bold text-h3 cursor-pointer">{user.name}</div>}
+                                            {!!recipe?.user && typeof recipe?.user === "object" && <div className="font-bold text-h3 cursor-pointer">{recipe.user.name} { recipe.user._id === user?._id && <span> (YOU)</span>}</div> }
                                             {!recipe?.user && !user && <div className="dark:text-dark-card">No data...</div>}
                                         </div>
                                         <div className="flex items-center gap-2">

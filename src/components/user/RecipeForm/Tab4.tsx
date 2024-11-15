@@ -146,7 +146,7 @@ function calculateNewSequenceNumber (steps : IRecipe['steps']) : number {
 }
 
 function addStepToArray(newStep : IStep, oldSteps : IRecipe['steps']) : IRecipe['steps'] {
-    return [...oldSteps, newStep]; 
+    return oldSteps ? [...oldSteps, newStep] : [newStep]; 
 }
 
 function removeStepFromArray(sequenceNumber: IStep['sequence_number'], steps: IRecipe['steps']): IRecipe['steps'] {
