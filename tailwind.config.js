@@ -34,6 +34,12 @@ export default {
             width : {
                 "half" : "50%", 
                 "45%" : "45%"
+            }, 
+
+            screens : {
+                'mobile' : '0px',
+                'tablet' : '650px', 
+                'desktop' : '835px'
             }
         },
     },

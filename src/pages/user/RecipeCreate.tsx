@@ -47,7 +47,7 @@ export default function UserRecipeCreate() {
         <>
             {!showPreview && (
                 <div>
-                    <div className="dark:text-dark-text-highlight text-h1">Create Your Own Recipe</div>
+                    <div className="dark:text-dark-text-highlight text-h1 mb-7">Create Your Own Recipe</div>
                     <UserRecipeForm saveRecipe={saveRecipe} recipe={recipe} setRecipe={setRecipe} action={EnumRecipeFormActions.Store} setShowPreview={setShowPreview} formLoading={formLoading} pageStart={pageStart} setPageStart={setPageStart}></UserRecipeForm>
                 </div>
             )}
