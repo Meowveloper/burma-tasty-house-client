@@ -35,7 +35,7 @@ export default function Profile() : JSX.Element {
     if (loading) return <div>Loading.....</div>;
 
     if(recipeToShow) return (
-        <div>
+        <div className="w-full">
             { Preview(recipeToShow)(true)()()()(user) }
             <button onClick={ () => { setRecipeToShow(null); } } className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small">Back</button>
         </div>
@@ -50,9 +50,9 @@ export default function Profile() : JSX.Element {
             </div>
             <div className="text-h2">email - {authContext.user?.email}</div>
 
-            <div>
-                <div className="text-h1 font-bold">Recipes</div>
-                <div className="grid grid-cols-2 gap-4">{!!user.recipes?.length && (user.recipes as IRecipe[]).map((item: IRecipe) => <React.Fragment key={item._id}>{ RecipeCard(item)(setRecipeToShow) }</React.Fragment>)}</div>
+            <div className="mt-5">
+                <div className="text-h1 font-bold mb-4">Your Recipes</div>
+                <div className="grid grid-cols-2 desktop:grid-cols-3 gap-4">{!!user.recipes?.length && (user.recipes as IRecipe[]).map((item: IRecipe) => <React.Fragment key={item._id}>{ RecipeCard(item)(setRecipeToShow) }</React.Fragment>)}</div>
             </div>
         </div>
     );

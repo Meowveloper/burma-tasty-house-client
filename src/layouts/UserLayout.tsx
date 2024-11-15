@@ -4,9 +4,9 @@ import UserGeneralNavBar from "../components/user/general/NavBar";
 
 export default function UserLayout() {
     return (
-        <div>
+        <div className="">
             <UserGeneralNavBar></UserGeneralNavBar>
-            <main className="p-5">
+            <main className="px-4 py-10 tablet:px-10 desktop:px-[100px]">
                 {/* <PageAnimate> */}
                     <Outlet />
                 {/* </PageAnimate> */}
