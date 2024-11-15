@@ -20,8 +20,8 @@ export default function Preview(recipe: IRecipe) {
                 return function (formLoading: boolean | undefined = undefined) {
                     return function (user: IUser | null) : JSX.Element {
                         return (
-                            <div>
-                                <div className="grid grid-cols-12 gap-2">
+                            <div className="w-full flex items-start gap-10">
+                                <div className="w-full desktop:w-[50%] grid grid-cols-12 gap-2">
                                     {/* image, title and views */}
                                     <div className="flex flex-col gap-3 col-span-12 border-b dark:border-dark-border pb-2">
                                         {/* image */}
@@ -116,6 +116,68 @@ export default function Preview(recipe: IRecipe) {
                                     </div>
                                     {/* ingredients end */}
 
+                                    {/* steps */} {/* only for mobile and tablet */}
+                                    <div className="col-span-12 border-b dark:border-dark-border pb-2 desktop:hidden">
+                                        <div className="text-h2">Steps</div>
+                                        {!!recipe?.steps?.length && (
+                                            <div className="grid grid-cols-1 gap-2">
+                                                {/* card */}
+                                                {recipe.steps.map((item: IStep) => (
+                                                    <div className="dark:bg-dark-card p-2 rounded-small" key={item.sequence_number}>
+                                                        <div className="flex items-center gap-3">
+                                                            {!!item.image && <img src={item.image instanceof File ? URL.createObjectURL(item.image) : item.image} className="w-45% h-[150px] rounded-small" alt="" />}
+                                                            <div className="flex-1 flex items-center gap-2">
+                                                                <div className="text-h3 font-bold">step</div>
+                                                                <div className="text-logo font-bold">{item.sequence_number}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="mt-3">{item.description}</div>
+                                                    </div>
+                                                ))}
+                                                {/* card end */}
+                                            </div>
+                                        )}
+                                        {!recipe?.steps?.length && <div className="dark:text-dark-card">No steps added...</div>}
+                                    </div>
+                                    {/* steps end */} {/* only for mobile and tablet */}
+
+                                    {/* video */} {/* only for mobile and tablet */}
+                                    <div className="col-span-12 border-b dark:border-dark-border pb-2 desktop:hidden">
+                                        <div className="text-h2 mb-2">Tutorial Video</div>
+                                        {!!recipe?.video && (
+                                            <video className="h-[200px] w-full" controls>
+                                                <source src={recipe.video instanceof File ? URL.createObjectURL(recipe.video) : recipe.video} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        )}
+                                        {!recipe?.video && <div className="dark:text-dark-card">No video added..</div>}
+                                    </div>
+                                    {/* video end */} {/* only for mobile and tablet */}
+
+                                    {/* buttons */}
+                                    <div className="col-span-12 mt-3 text-center">
+                                        {!!setShowPreview && (
+                                            <button
+                                                onClick={() => {
+                                                    setShowPreview!(false);
+                                                }}
+                                                className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3"
+                                            >
+                                                Back to Form
+                                            </button>
+                                        )}
+                                        {setShowPreview && saveRecipe && (
+                                            <button onClick={saveRecipe} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small">
+                                                {formLoading && <div className="recipe-form-loader m-auto"></div>}
+                                                {!formLoading && <span>Save</span>}
+                                            </button>
+                                        )}
+                                    </div>
+                                    {/* buttons end */}
+                                </div>
+
+                                {/* only for desktop */}
+                                <div className="hidden desktop:grid w-full desktop:w-[50%] grid-cols-12 gap-2">
                                     {/* steps */}
                                     <div className="col-span-12 border-b dark:border-dark-border pb-2">
                                         <div className="text-h2">Steps</div>
@@ -153,28 +215,8 @@ export default function Preview(recipe: IRecipe) {
                                         {!recipe?.video && <div className="dark:text-dark-card">No video added..</div>}
                                     </div>
                                     {/* video end */}
-
-                                    {/* buttons */}
-                                    <div className="col-span-12 mt-3">
-                                        {!!setShowPreview && (
-                                            <button
-                                                onClick={() => {
-                                                    setShowPreview!(false);
-                                                }}
-                                                className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3"
-                                            >
-                                                Back to Form
-                                            </button>
-                                        )}
-                                        {setShowPreview && saveRecipe && (
-                                            <button onClick={saveRecipe} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">
-                                                {formLoading && <div className="recipe-form-loader m-auto"></div>}
-                                                {!formLoading && <span>Save</span>}
-                                            </button>
-                                        )}
-                                    </div>
-                                    {/* buttons end */}
                                 </div>
+                                {/* only for desktop */}
                             </div>
                         );
                     };

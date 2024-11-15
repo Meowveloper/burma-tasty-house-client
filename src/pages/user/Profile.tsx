@@ -35,7 +35,7 @@ export default function Profile() : JSX.Element {
     if (loading) return <div>Loading.....</div>;
 
     if(recipeToShow) return (
-        <div>
+        <div className="w-full">
             { Preview(recipeToShow)(true)()()()(user) }
             <button onClick={ () => { setRecipeToShow(null); } } className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small">Back</button>
         </div>
