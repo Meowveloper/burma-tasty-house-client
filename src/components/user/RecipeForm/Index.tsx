@@ -27,11 +27,11 @@ export default function Index(props: IProps) {
         <div className="flex justify-between items-stretch">
             <div className="w-full desktop:w-[55%]">
                 <div className="dark:bg-dark-elevate py-3 rounded-normal flex w-full justify-between px-9">
-                    <div className={`${tabNumber === 1 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}>1</div>
-                    <div className={`${tabNumber === 2 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}>2</div>
-                    <div className={`${tabNumber === 3 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}>3</div>
-                    <div className={`${tabNumber === 4 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}>4</div>
-                    <div className={`${tabNumber === 5 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full`}>5</div>
+                    <div onClick={changeTab(1)} className={`${tabNumber === 1 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full cursor-pointer`}>1</div>
+                    <div onClick={changeTab(2)} className={`${tabNumber === 2 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full cursor-pointer`}>2</div>
+                    <div onClick={changeTab(3)} className={`${tabNumber === 3 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full cursor-pointer`}>3</div>
+                    <div onClick={changeTab(4)} className={`${tabNumber === 4 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full cursor-pointer`}>4</div>
+                    <div onClick={changeTab(5)} className={`${tabNumber === 5 ? "dark:bg-dark-card text-dark-text-highlight" : "dark:bg-dark-secondary-card"} h-[25px] w-[25px] leading-[25px] text-center rounded-full cursor-pointer`}>5</div>
                 </div>
 
                 <div className="dark:bg-dark-secondary-card mt-5 py-3 rounded-normal px-3 tablet:px-6 desktop:px-8">
@@ -93,5 +93,12 @@ export default function Index(props: IProps) {
             if (prev !== 1) return (prev - 1) as TTabNumber;
             else return prev;
         });
+    }
+
+
+    function changeTab(tab: TTabNumber) {
+        return function () {
+            setTabNumber(tab);
+        }
     }
 }
