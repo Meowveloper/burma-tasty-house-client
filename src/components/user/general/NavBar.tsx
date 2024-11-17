@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../../contexts/AuthContext";
-import axios from '../../../utilities/axios';
+import axios from "../../../utilities/axios";
 import EnumAuthReducerActionTypes from "../../../types/EnumAuthReducerActionTypes";
 import { EnumUserRoutes } from "../../../types/EnumRoutes";
 
@@ -19,8 +19,16 @@ export default function NavBar() {
                 </a>
                 <div className="flex items-center justify-start gap-2">
                     <div className="">
-                        { authContext.user && <div onClick={ logout } className="text-h2 font-bold cursor-pointer">Logout</div> }
-                        { !authContext.user && <NavLink className="text-h2 font-bold cursor-pointer" to="/auth/login">Login</NavLink>}
+                        {authContext.user && (
+                            <div onClick={logout} className="text-h2 font-bold cursor-pointer">
+                                Logout
+                            </div>
+                        )}
+                        {!authContext.user && (
+                            <NavLink className="text-h2 font-bold cursor-pointer" to="/auth/login">
+                                Login
+                            </NavLink>
+                        )}
                     </div>
                     <button onClick={() => setShowMobileMenu(prev => !prev)} type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded={showMobileMenu}>
                         <span className="sr-only">Open main menu</span>
@@ -29,52 +37,56 @@ export default function NavBar() {
                         </svg>
                     </button>
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: showMobileMenu ? 1 : 0, height: showMobileMenu ? "auto" : 0 }} transition={{ duration: 0.3 }} className="absolute dark:bg-[#2B2D31] w-[200px] top-[100%] right-0">
-                        <div className="ps-5 py-3 border-b border-dark-text">
-                            <NavLink
-                                to="/"
-                                onClick={() => {
-                                    setShowMobileMenu(false);
-                                }}
-                                className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
-                            >
-                                Home
-                            </NavLink>
-                        </div>
-                        <div className="ps-5 py-3 border-b border-dark-text">
-                            <NavLink
-                                to={EnumUserRoutes.RecipeCreate}
-                                onClick={() => {
-                                    setShowMobileMenu(false);
-                                }}
-                                className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
-                            >
-                                Create Recipe
-                            </NavLink>
-                        </div>
-                        <div className="ps-5 py-3 border-b border-dark-text">
-                            <NavLink
-                                to={`${EnumUserRoutes.Profile}/${authContext.user?._id}`}
-                                onClick={() => {
-                                    setShowMobileMenu(false);
-                                }}
-                                className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
-                            >
-                                Profile
-                            </NavLink>
-                        </div>
+                        {showMobileMenu && (
+                            <>
+                                <div className="ps-5 py-3 border-b border-dark-text">
+                                    <NavLink
+                                        to="/"
+                                        onClick={() => {
+                                            setShowMobileMenu(false);
+                                        }}
+                                        className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
+                                    >
+                                        Home
+                                    </NavLink>
+                                </div>
+                                <div className="ps-5 py-3 border-b border-dark-text">
+                                    <NavLink
+                                        to={EnumUserRoutes.RecipeCreate}
+                                        onClick={() => {
+                                            setShowMobileMenu(false);
+                                        }}
+                                        className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
+                                    >
+                                        Create Recipe
+                                    </NavLink>
+                                </div>
+                                <div className="ps-5 py-3 border-b border-dark-text">
+                                    <NavLink
+                                        to={`${EnumUserRoutes.Profile}/${authContext.user?._id}`}
+                                        onClick={() => {
+                                            setShowMobileMenu(false);
+                                        }}
+                                        className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
+                                    >
+                                        Profile
+                                    </NavLink>
+                                </div>
+                            </>
+                        )}
                     </motion.div>
                 </div>
             </div>
         </nav>
     );
 
-    function logout () {
-        axios.post('/users/logout').then(res => {
+    function logout() {
+        axios.post("/users/logout").then(res => {
             console.log(res);
-            if(res.status === 200) {
+            if (res.status === 200) {
                 authContext.dispatch({ type: EnumAuthReducerActionTypes.Logout });
-                navigate('/');                
+                navigate("/");
             }
-        })
+        });
     }
 }
