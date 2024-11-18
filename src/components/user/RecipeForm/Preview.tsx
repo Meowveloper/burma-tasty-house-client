@@ -18,7 +18,7 @@ export default function Preview(recipe: IRecipe) {
         return function (setShowPreview: React.Dispatch<React.SetStateAction<boolean>> | undefined = undefined) {
             return function (saveRecipe: SaveRecipe | undefined = undefined) {
                 return function (formLoading: boolean | undefined = undefined) {
-                    return function (user: IUser | null) : JSX.Element {
+                    return function (user: IUser | null = null) : JSX.Element {
                         return (
                             <div className="w-full flex items-start gap-10">
                                 <div className="w-full desktop:w-[50%] grid grid-cols-12 gap-2">
@@ -59,7 +59,7 @@ export default function Preview(recipe: IRecipe) {
                                             {!!notPreview && (
                                                 <div className="flex items-center gap-2">
                                                     <Icon icon="ph:eye-light" />
-                                                    <div>30</div>
+                                                    <div>{recipe?.views ? recipe.views : 0}</div>
                                                 </div>
                                             )}
                                         </div>

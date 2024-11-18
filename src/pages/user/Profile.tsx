@@ -41,7 +41,6 @@ export default function Profile() : JSX.Element {
         </div>
     ); 
     
-    
 
     return (
         <div>
