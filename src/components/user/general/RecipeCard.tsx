@@ -1,14 +1,16 @@
+import { useContext } from "react";
 import IRecipe from "../../../types/IRecipe";
+import addOneViewToRecipe from "../../../utilities/addOneViewToRecipe";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 
 export default function RecipeCard(recipe : IRecipe) {
+    const authContext = useContext(AuthContext);
     return function (setRecipeToShow: React.Dispatch<React.SetStateAction<IRecipe | null>>) {
         return (
             <div
                 className="dark:bg-dark-card p-4 rounded-small"
-                onClick={() => {
-                    setRecipeToShow(recipe);
-                }}
+                onClick={() => { seeDetails(); }}
             >
                 <div className="text-h3 font-bold dark:text-dark-text-highlight">{recipe.title}</div>
                 <img src={recipe.image as string} className="w-full h-[150px] rounded-small" />
@@ -16,5 +18,21 @@ export default function RecipeCard(recipe : IRecipe) {
                 <div>difficulty level - {recipe.difficulty_level}</div>
             </div>
         );
+
+        function seeDetails () {
+            if(!authContext.user) setRecipeToShow(recipe); 
+            if(typeof recipe.user === 'string') setRecipeToShow(recipe);
+            if(typeof recipe.user !== 'string' && authContext.user?._id === recipe.user._id) setRecipeToShow(recipe);
+            if(typeof recipe.user !== 'string' && authContext.user?._id !== recipe.user._id) {
+                addOneViewToRecipe(recipe._id).then(res => {
+                    console.log(res);
+                    setRecipeToShow(recipe);
+                }).catch(e => {
+                    console.log(e);
+                    setRecipeToShow(recipe);
+                });
+            }
+        }
     };
+
 }

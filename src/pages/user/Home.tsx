@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import IRecipe from "../../types/IRecipe";
 import axios from "../../utilities/axios";
 import Preview from "../../components/user/RecipeForm/Preview";
 import RecipeCard from "../../components/user/general/RecipeCard";
+import { AuthContext } from "../../contexts/AuthContext";
 
 enum EnumRoutesForFetchingRecipesWithLimits {
     latest = "/recipes/latest",
     highestView = "/recipes/highest-view",
 }
 export default function UserHome() {
+    const authContext = useContext(AuthContext);
     const [latestRecipes, setLatestRecipes] = useState<IRecipe[]>([]);
     const [ highestViewRecipes, setHighestViewRecipes ] = useState<IRecipe[]>([]);
     const [latestRecipesLoading, setLatestRecipesLoading] = useState<boolean>(false);
@@ -48,6 +50,16 @@ export default function UserHome() {
             });
     }, []);
 
+    useEffect(() => {
+        console.log('checking infinite loop from pages/user/Home.tsx for adding views to recipes');
+        if(recipeToShow && authContext.user && authContext.user._id !== (typeof recipeToShow.user === 'string' ? recipeToShow.user : recipeToShow.user._id)) {
+            setLatestRecipes(prev => findInRecipeArrayAndAddOneView(prev, recipeToShow._id));
+            setHighestViewRecipes(prev => findInRecipeArrayAndAddOneView(prev, recipeToShow._id));
+            console.log('added view in client');
+        }
+    }, [recipeToShow, authContext.user])
+
+
     if (recipeToShow)
         return (
             <div className="w-full">
@@ -78,9 +90,9 @@ export default function UserHome() {
                         {!!latestRecipes.length &&
                             !latestRecipesLoading &&
                             latestRecipes.map((item: IRecipe) => (
-                                <div className="" key={item._id}>
+                                <React.Fragment key={item._id}>
                                     {RecipeCard(item)(setRecipeToShow)}
-                                </div>
+                                </React.Fragment>
                             ))}
                     </div>
                 </div>
@@ -100,9 +112,9 @@ export default function UserHome() {
                         {!!highestViewRecipes.length &&
                             !latestRecipesLoading &&
                             highestViewRecipes.map((item: IRecipe) => (
-                                <div className="" key={item._id}>
+                                <React.Fragment key={item._id}>
                                     {RecipeCard(item)(setRecipeToShow)}
-                                </div>
+                                </React.Fragment>
                             ))}
                     </div>
                 </div>
@@ -124,4 +136,12 @@ function getRecipesWithLimit(url: EnumRoutesForFetchingRecipesWithLimits): (limi
             throw new Error((e as Error).message);
         }
     };
+}
+
+function findInRecipeArrayAndAddOneView (recipes : IRecipe[], _id : IRecipe['_id']) {
+    const newRecipes = recipes.map((item : IRecipe) => {
+        if(item._id === _id) return {...item, views : item.views + 1};
+        else return item;
+    });
+    return newRecipes;
 }
