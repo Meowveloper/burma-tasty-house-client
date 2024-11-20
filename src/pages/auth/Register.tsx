@@ -1,11 +1,15 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
 import axios from "../../utilities/axios";
 import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import EnumAuthReducerActionTypes from "../../types/EnumAuthReducerActionTypes";
+import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { EnumUserRoutes } from "../../types/EnumRoutes";
+import { jwtDecode } from "jwt-decode";
+import { JwtPayloadForGoogleLogin } from "./Login";
 
 export default function Register() {
+    const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
     const [ name, setName ] = useState<string>('');
     const [ email, setEmail ] = useState<string>('');
     const [ password, setPassword ] = useState<string>('');
@@ -60,10 +64,17 @@ export default function Register() {
                     <div className="w-full h-[2px] dark:bg-dark-border"></div>
                 </div>
                 <div>
-                    <div className="text-h3 font-bold text-center">Register with</div>
-                    <div className="flex justify-center items-center gap-7 mt-5">
-                        <Icon icon="flat-color-icons:google" width="2.2em" height="2.2em" />
-                        <Icon icon="logos:facebook" width="2.2em" height="2.2em" />
+                    <div className="mt-5">
+                        <GoogleOAuthProvider clientId={googleClientID}>
+                            <GoogleLogin
+                                onSuccess={(credentialResponse: CredentialResponse) => {
+                                    onGoogleLoginSuccess(credentialResponse);
+                                }}
+                                onError={() => {
+                                    alert("error login with google");
+                                }}
+                            ></GoogleLogin>
+                        </GoogleOAuthProvider>
                     </div>
                 </div>
                 <div className="text-center mt-5">
@@ -98,5 +109,31 @@ export default function Register() {
         }).finally(() => {
             setNormalRegisterLoading(false);
         })
+    }
+
+    function onGoogleLoginSuccess(credentialResponse: CredentialResponse) {
+        console.log(credentialResponse);
+        if (credentialResponse.credential) {
+            const userData = jwtDecode(credentialResponse.credential) as JwtPayloadForGoogleLogin;
+            console.log("user data", userData);
+            axios
+                .post("/users/google-auth", {
+                    email: userData.email,
+                    name: userData.name,
+                    avatar: userData.picture,
+                })
+                .then(res => {
+                    console.log(res);
+                    if (res.status === 200) {
+                        authContext.dispatch({ type: EnumAuthReducerActionTypes.LoginOrRegister, payload: res.data.data });
+                        navigate(EnumUserRoutes.Home);
+                    }
+                }).catch(e => {
+                    console.log(e);
+                    alert("error login with google");
+                });
+        } else {
+            alert("error login with google");
+        }
     }
 }

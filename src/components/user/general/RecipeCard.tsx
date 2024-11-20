@@ -1,11 +1,9 @@
-import { useContext } from "react";
 import IRecipe from "../../../types/IRecipe";
+import IUser from "../../../types/IUser";
 import addOneViewToRecipe from "../../../utilities/addOneViewToRecipe";
-import { AuthContext } from "../../../contexts/AuthContext";
 
 
-export default function RecipeCard(recipe : IRecipe) {
-    const authContext = useContext(AuthContext);
+export default function RecipeCard(recipe : IRecipe, authContext : { user : IUser | null }) {
     return function (setRecipeToShow: React.Dispatch<React.SetStateAction<IRecipe | null>>) {
         return (
             <div

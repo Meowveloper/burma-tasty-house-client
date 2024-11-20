@@ -91,7 +91,7 @@ export default function UserHome() {
                             !latestRecipesLoading &&
                             latestRecipes.map((item: IRecipe) => (
                                 <React.Fragment key={item._id}>
-                                    {RecipeCard(item)(setRecipeToShow)}
+                                    {RecipeCard(item, authContext)(setRecipeToShow)}
                                 </React.Fragment>
                             ))}
                     </div>
@@ -113,7 +113,7 @@ export default function UserHome() {
                             !latestRecipesLoading &&
                             highestViewRecipes.map((item: IRecipe) => (
                                 <React.Fragment key={item._id}>
-                                    {RecipeCard(item)(setRecipeToShow)}
+                                    {RecipeCard(item, authContext)(setRecipeToShow)}
                                 </React.Fragment>
                             ))}
                     </div>
