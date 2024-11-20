@@ -70,20 +70,25 @@ export default function Routes() {
             ],
         },
         {
-            path: EnumUserRoutes.Login,
-            element: (
-                <UnauthenticatedRoutes>
-                    <Login></Login>
-                </UnauthenticatedRoutes>
-            ),
-        },
-        {
-            path: EnumUserRoutes.Register,
-            element: (
-                <UnauthenticatedRoutes>
-                    <Register></Register>
-                </UnauthenticatedRoutes>
-            ),
+            element: <UserLayout />,
+            children: [
+                {
+                    path: EnumUserRoutes.Login,
+                    element: (
+                        <UnauthenticatedRoutes>
+                            <Login></Login>
+                        </UnauthenticatedRoutes>
+                    ),
+                },
+                {
+                    path: EnumUserRoutes.Register,
+                    element: (
+                        <UnauthenticatedRoutes>
+                            <Register></Register>
+                        </UnauthenticatedRoutes>
+                    ),
+                },
+            ],
         },
     ]);
 

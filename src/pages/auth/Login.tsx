@@ -56,7 +56,7 @@ export default function Login() {
                     <div className="w-full h-[2px] dark:bg-dark-border"></div>
                 </div>
                 <div>
-                    <div className="mt-5">
+                    <div className="mt-5 flex flex-col items-center justify-center gap-4">
                         <GoogleOAuthProvider clientId={googleClientID}>
                             <GoogleLogin
                                 onSuccess={(credentialResponse: CredentialResponse) => {
@@ -120,7 +120,8 @@ export default function Login() {
                         authContext.dispatch({ type: EnumAuthReducerActionTypes.LoginOrRegister, payload: res.data.data });
                         navigate(EnumUserRoutes.Home);
                     }
-                }).catch(e => {
+                })
+                .catch(e => {
                     console.log(e);
                     alert("error login with google");
                 });

@@ -64,7 +64,7 @@ export default function Register() {
                     <div className="w-full h-[2px] dark:bg-dark-border"></div>
                 </div>
                 <div>
-                    <div className="mt-5">
+                    <div className="mt-5 flex flex-col items-center justify-center gap-4">
                         <GoogleOAuthProvider clientId={googleClientID}>
                             <GoogleLogin
                                 onSuccess={(credentialResponse: CredentialResponse) => {
