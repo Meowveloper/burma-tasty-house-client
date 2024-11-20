@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axios from "../../../utilities/axios";
@@ -9,7 +9,6 @@ import { EnumUserRoutes } from "../../../types/EnumRoutes";
 export default function NavBar() {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
     const authContext = useContext(AuthContext);
-    const navigate = useNavigate();
 
     return (
         <nav className="bg-white dark:bg-[#1E1F22] relative">
@@ -80,13 +79,14 @@ export default function NavBar() {
         </nav>
     );
 
-    function logout() {
-        axios.post("/users/logout").then(res => {
-            console.log(res);
-            if (res.status === 200) {
-                authContext.dispatch({ type: EnumAuthReducerActionTypes.Logout });
-                navigate("/");
-            }
-        });
+    async function logout() {
+        try {
+            const response = await axios.post("/users/logout");
+            console.log(response);
+            authContext.dispatch({ type: EnumAuthReducerActionTypes.Logout });
+            history.pushState(null, "", "/");
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
