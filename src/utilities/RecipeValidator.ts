@@ -62,7 +62,7 @@ class RecipeValidator {
         if(video && video instanceof File) {
            if(video instanceof File) return GeneralValidators.isVideoByExtension(video.name) && GeneralValidators.lessThanOrEqualFileSize(video, 100); 
         }
-        return false;
+        return true;
     }
 
     public static all(recipe : IRecipe, action : EnumRecipeFormActions = EnumRecipeFormActions.Store) : boolean
@@ -85,7 +85,7 @@ class RecipeValidator {
 
         if(!recipe.steps || !this.steps(recipe.steps)) return false;
 
-        if(!recipe.video || !this.video(recipe.video)) return false;
+        if(!this.video(recipe.video)) return false;
 
         return true;
     }
