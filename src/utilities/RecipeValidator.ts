@@ -15,10 +15,10 @@ class RecipeValidator {
 
     public static image(image : IRecipe['image']) : boolean
     {
-        if(!image || !(image instanceof File)) return false;
-        else {
+        if(!image) return false;
+        else if(image instanceof File) {
             return GeneralValidators.isImageByExtension(image.name) && GeneralValidators.lessThanOrEqualFileSize(image, 50);
-        }
+        } else return true;
     }
 
     public static description(description : IRecipe['description']) : boolean

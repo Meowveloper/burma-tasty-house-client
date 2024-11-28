@@ -12,6 +12,7 @@ import { EnumUserRoutes } from "../../types/EnumRoutes";
 import updateObjectFields from "../../utilities/updateObjectFields";
 import ITag from "../../types/ITag";
 import { TagsToDeleteContext } from "../../contexts/TagsToDeleteContext";
+import RecipeValidator from "../../utilities/RecipeValidator";
 export default function RecipeUpdate() {
     const params = useParams();
     const [initialLoading, setInitialLoading] = useState<boolean>(true);
@@ -65,6 +66,7 @@ export default function RecipeUpdate() {
 
     async function updateRecipe() 
     {
+        if(!RecipeValidator.all(recipe, EnumRecipeFormActions.Update)) return;
         setFormLoading(true);
         console.log('steps to delete in update recipe function', stepsToDeleteContext.stepsToDelete);
         console.log('tags to delete in update recipe function', tagsToDeleteContext.tagsToDelete);
