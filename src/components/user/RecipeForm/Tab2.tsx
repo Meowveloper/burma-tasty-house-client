@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import IRecipe from "../../../types/IRecipe";
 import UserGeneralTags from "../general/Tags";
 import GeneralValidators from "../../../utilities/GeneralValidators";
 import RecipeValidator from "../../../utilities/RecipeValidator";
 import updateObjectFields from "../../../utilities/updateObjectFields";
+import { TagsToDeleteContext } from "../../../contexts/TagsToDeleteContext";
 interface IProps {
     recipe: IRecipe;
     setRecipe: React.Dispatch<React.SetStateAction<IRecipe>>;
@@ -13,6 +14,7 @@ interface IProps {
 export default function Tab2(props: IProps) {
     const [newTag, setNewTag] = useState<string>("");
     const updateRecipeTags = updateObjectFields(props.recipe)("tags");
+    const tagsToDeleteContext = useContext(TagsToDeleteContext);
     return (
         <div>
             <div className="text-h2 font-bold mt-3 text-center">
@@ -35,7 +37,7 @@ export default function Tab2(props: IProps) {
             </div>
             {!props.pageStart && (!GeneralValidators.isText(newTag) || !GeneralValidators.greaterThanOrEqualTextLength(newTag, 2)) && <span className="text-red-500 font-bold">Tag must contain at least 2(TWO) characters and must contain at least one alphabetic character</span>}
             <div className="mt-3">{!!props.recipe?.tags?.length && <UserGeneralTags tags={props.recipe.tags} removeTag={removeTag}></UserGeneralTags>}</div>
-            {!RecipeValidator.tags(props.recipe.tags) && <span className="text-red-500 font-bold">Must contain at least one tag!</span>}
+            {!RecipeValidator.tags(props.recipe.tags) && <span className="text-red-500 font-bold">Must contain at least two tag!</span>}
             <div className="bg-transparent my-5 w-[95%] mx-auto h-[1px]"></div>
         </div>
     );
@@ -52,14 +54,17 @@ export default function Tab2(props: IProps) {
         setNewTag(e.target.value);
     }
     function removeTag(id: string | number) {
+        if (typeof id === "string") {
+            tagsToDeleteContext.setTagsToDelete(prev => [...prev, id]);
+        }
         const updatedTags = filterTags(props.recipe.tags, id);
         props.setRecipe(updateRecipeTags(updatedTags));
     }
 
-    function filterTags(tags: IRecipe['tags'], id: string | number): IRecipe['tags'] {
-    return tags.filter((tag, index) => {
-        if (typeof id === "string" && typeof tag !== "string") return tag._id !== id;
-        return index !== id;
-    });
-}
+    function filterTags(tags: IRecipe["tags"], id: string | number): IRecipe["tags"] {
+        return tags.filter((tag, index) => {
+            if (typeof id === "string" && typeof tag !== "string") return tag._id !== id;
+            return index !== id;
+        });
+    }
 }

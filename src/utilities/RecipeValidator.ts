@@ -41,7 +41,7 @@ class RecipeValidator {
 
     public static tags(tags : IRecipe['tags']) : boolean 
     {
-        if(tags) return tags.length > 0;
+        if(tags) return tags.length >= 2;
         else return false; 
     }
 

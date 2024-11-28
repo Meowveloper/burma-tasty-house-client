@@ -5,7 +5,7 @@ import axios from "../../utilities/axios";
 import IUser from "../../types/IUser";
 import IRecipe from "../../types/IRecipe";
 import RecipeCard from "../../components/user/general/RecipeCard";
-import Preview from "../../components/user/RecipeForm/Preview";
+import RecipeDetail from "./RecipeDetail";
 export default function Profile() : JSX.Element {
     const authContext = useContext(AuthContext);
     const params = useParams();
@@ -35,10 +35,7 @@ export default function Profile() : JSX.Element {
     if (loading) return <div>Loading.....</div>;
 
     if(recipeToShow) return (
-        <div className="w-full">
-            { Preview(recipeToShow)(true)()()()(user) }
-            <button onClick={ () => { setRecipeToShow(null); } } className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small">Back</button>
-        </div>
+        <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} />
     ); 
     
 

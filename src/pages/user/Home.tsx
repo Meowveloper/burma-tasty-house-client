@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import IRecipe from "../../types/IRecipe";
 import axios from "../../utilities/axios";
-import Preview from "../../components/user/RecipeForm/Preview";
 import RecipeCard from "../../components/user/general/RecipeCard";
 import { AuthContext } from "../../contexts/AuthContext";
+import RecipeDetail from "./RecipeDetail";
 
 enum EnumRoutesForFetchingRecipesWithLimits {
     latest = "/recipes/latest",
@@ -62,17 +62,7 @@ export default function UserHome() {
 
     if (recipeToShow)
         return (
-            <div className="w-full">
-                {Preview(recipeToShow)(true)()()()()}
-                <button
-                    onClick={() => {
-                        setRecipeToShow(null);
-                    }}
-                    className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small"
-                >
-                    Back
-                </button>
-            </div>
+            <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow}></RecipeDetail>
         );
 
     return (
