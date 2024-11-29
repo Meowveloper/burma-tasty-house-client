@@ -3,11 +3,11 @@ import IUser from "../../types/IUser";
 import Preview from "../../components/user/RecipeForm/Preview";
 import { useLocation, useNavigate } from "react-router-dom";
 import { EnumUserRoutes } from "../../types/EnumRoutes";
-import axios from '../../utilities/axios';
 interface IProps {
     recipeToShow: IRecipe;
     user: IUser | null;
     setRecipeToShow: React.Dispatch<React.SetStateAction<IRecipe | null>>;
+    deleteRecipe : () => Promise<void>;
 }
 export default function RecipeDetail(props: IProps) {
     const recipeUserId = typeof props.recipeToShow.user === 'string' ? props.recipeToShow.user : props.recipeToShow.user._id;
@@ -33,7 +33,7 @@ export default function RecipeDetail(props: IProps) {
                             Edit
                         </button>
                         
-                        <button onClick={deleteRecipe} className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small ms-3">
+                        <button onClick={props.deleteRecipe} className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small ms-3">
                             Delete
                         </button>
                     </>
@@ -41,14 +41,4 @@ export default function RecipeDetail(props: IProps) {
             }
         </div>
     );
-
-    async function deleteRecipe() {
-        const isConfirm = window.confirm("Are you sure you want to delete this recipe?");
-        if (isConfirm) {
-            const result = await axios.delete(`/recipes/${props.recipeToShow._id}`);
-            if (result.status === 200) {
-                navigate(location.pathname);
-            }
-        }
-    }
 }

@@ -6,6 +6,7 @@ import IUser from "../../types/IUser";
 import IRecipe from "../../types/IRecipe";
 import RecipeCard from "../../components/user/general/RecipeCard";
 import RecipeDetail from "./RecipeDetail";
+import { deleteRecipeInBackendAndRemoveRecipeFromStates } from "../../utilities/generalHelperFunctions";
 export default function Profile(): JSX.Element {
     const authContext = useContext(AuthContext);
     const params = useParams();
@@ -13,6 +14,7 @@ export default function Profile(): JSX.Element {
     const [user, setUser] = useState<IUser>({} as IUser);
     const [loading, setLoading] = useState<boolean>(false);
     const [recipeToShow, setRecipeToShow] = useState<IRecipe | null>(null);
+    const [recipes, setRecipes] = useState<IRecipe[]>([]);
 
     useEffect(() => {
         setLoading(true);
@@ -22,6 +24,7 @@ export default function Profile(): JSX.Element {
             .then(res => {
                 console.log(res);
                 setUser(res.data.data);
+                setRecipes(res.data.data.recipes);
             })
             .catch(e => {
                 console.log(e);
@@ -33,7 +36,9 @@ export default function Profile(): JSX.Element {
 
     if (loading) return <div>Loading.....</div>;
 
-    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} />;
+    const deleteRecipeAndRemoveFromUserRecipes = deleteRecipeInBackendAndRemoveRecipeFromStates(recipeToShow?._id, [setRecipes], () => { setRecipeToShow(null); });
+
+    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromUserRecipes}/>;
 
     return (
         <div>
@@ -56,7 +61,7 @@ export default function Profile(): JSX.Element {
 
             <div className="mt-5">
                 <div className="text-h1 font-bold mb-4">Your Recipes</div>
-                <div className="grid grid-cols-2 desktop:grid-cols-3 gap-4">{!!user.recipes?.length && (user.recipes as IRecipe[]).map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}</div>
+                <div className="grid grid-cols-2 desktop:grid-cols-3 gap-4">{!!recipes?.length && (recipes as IRecipe[]).map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}</div>
             </div>
         </div>
     );
