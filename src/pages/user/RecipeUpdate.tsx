@@ -71,17 +71,10 @@ export default function RecipeUpdate() {
         console.log('steps to delete in update recipe function', stepsToDeleteContext.stepsToDelete);
         console.log('tags to delete in update recipe function', tagsToDeleteContext.tagsToDelete);
         try {
-            if(!authContext.user) throw new Error('not authenticated');
-            const tags  = recipe.tags.map((tag) => {
-                if (typeof tag === "string") return { name : tag } as ITag;
-                else return tag;
-            });
+            // check authentication
+            if(!authContext.user) throw new Error('not authenticated'); 
 
-            const recipeFormData = appendRecipeToFormData(updateRecipeTags(tags), authContext.user._id);
-            console.log('recipe form data',recipe);
-            const result = await axios.put('/recipes', recipeFormData);
-            console.log(result);
-
+            // remove steps and tags if necessary
             const stepDeleteFormData = new FormData();
             stepsToDeleteContext.stepsToDelete.forEach(step => stepDeleteFormData.append('data', String(step)));
 
@@ -100,7 +93,19 @@ export default function RecipeUpdate() {
                 console.log('steps and tags deleted');
             }
 
-            navigate(EnumUserRoutes.Home);
+            // update recipe
+            const tags  = recipe.tags.map((tag) => {
+                if (typeof tag === "string") return { name : tag } as ITag;
+                else return tag;
+            });
+
+            const recipeFormData = appendRecipeToFormData(updateRecipeTags(tags), authContext.user._id);
+            const result = await axios.put('/recipes', recipeFormData);
+            
+            if(result.status === 200) 
+            {
+                navigate(EnumUserRoutes.Home);
+            }
         } catch (error) {
             console.log(error)            
         } finally {
