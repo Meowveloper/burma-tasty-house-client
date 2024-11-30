@@ -4,12 +4,15 @@ import UserHome from "../pages/user/Home";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminHome from "../pages/admin/AdminHome";
 import UserRecipeCreate from "../pages/user/RecipeCreate";
+import UserRecipeUpdate from "../pages/user/RecipeUpdate";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import { EnumAdminRoutes, EnumUserRoutes } from "../types/EnumRoutes";
 import ProtectedRoutes from "../components/general/ProtectedRoutes";
 import UserProfile from "../pages/user/Profile";
 import UnauthenticatedRoutes from "../components/general/UnAuthenticatedRoutes";
+import { StepsToDeleteContextProvider } from "../contexts/StepsToDeleteContext";
+import { TagsToDeleteContextProvider } from "../contexts/TagsToDeleteContext";
 
 export default function Routes() {
     const routes = createBrowserRouter([
@@ -25,9 +28,25 @@ export default function Routes() {
                     path: EnumUserRoutes.RecipeCreate,
                     element: (
                         <ProtectedRoutes>
-                            <UserRecipeCreate />
+                            <StepsToDeleteContextProvider>
+                                <TagsToDeleteContextProvider>
+                                    <UserRecipeCreate />
+                                </TagsToDeleteContextProvider>
+                            </StepsToDeleteContextProvider>
                         </ProtectedRoutes>
                     ),
+                },
+                {
+                    path: `${EnumUserRoutes.RecipeUpdate}/:id`,
+                    element: (
+                        <ProtectedRoutes>
+                            <StepsToDeleteContextProvider>
+                                <TagsToDeleteContextProvider>
+                                    <UserRecipeUpdate />
+                                </TagsToDeleteContextProvider>
+                            </StepsToDeleteContextProvider>
+                        </ProtectedRoutes>
+                    )
                 },
                 {
                     path: `${EnumUserRoutes.Profile}/:id`,

@@ -15,7 +15,7 @@ interface IProps {
     setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
     recipe: IRecipe;
     setRecipe: React.Dispatch<React.SetStateAction<IRecipe>>;
-    saveRecipe: () => void;
+    formSubmit: () => void;
     formLoading: boolean;
     pageStart: boolean;
     setPageStart: React.Dispatch<React.SetStateAction<boolean>>;
@@ -59,7 +59,7 @@ export default function Index(props: IProps) {
                         </button>
                     </div>
                     <div className="text-center">
-                        <button onClick={props.saveRecipe} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">
+                        <button onClick={props.formSubmit} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[60px] rounded-small me-3">
                             {props.formLoading && <div className="recipe-form-loader m-auto"></div>}
                             {!props.formLoading && <span>Save</span>}
                         </button>

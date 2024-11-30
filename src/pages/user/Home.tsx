@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import IRecipe from "../../types/IRecipe";
 import axios from "../../utilities/axios";
-import Preview from "../../components/user/RecipeForm/Preview";
 import RecipeCard from "../../components/user/general/RecipeCard";
 import { AuthContext } from "../../contexts/AuthContext";
-
+import RecipeDetail from "./RecipeDetail";
+import {  deleteRecipeInBackendAndRemoveRecipeFromStates } from "../../utilities/generalHelperFunctions";
 enum EnumRoutesForFetchingRecipesWithLimits {
     latest = "/recipes/latest",
     highestView = "/recipes/highest-view",
@@ -12,7 +12,7 @@ enum EnumRoutesForFetchingRecipesWithLimits {
 export default function UserHome() {
     const authContext = useContext(AuthContext);
     const [latestRecipes, setLatestRecipes] = useState<IRecipe[]>([]);
-    const [ highestViewRecipes, setHighestViewRecipes ] = useState<IRecipe[]>([]);
+    const [highestViewRecipes, setHighestViewRecipes] = useState<IRecipe[]>([]);
     const [latestRecipesLoading, setLatestRecipesLoading] = useState<boolean>(false);
     const [highestViewRecipesLoading, setHighestViewRecipesLoading] = useState<boolean>(false);
     const [recipeToShow, setRecipeToShow] = useState<IRecipe | null>(null);
@@ -33,7 +33,6 @@ export default function UserHome() {
             });
     }, []);
 
-
     useEffect(() => {
         console.log("checking infinite loop from pages/user/Home.tsx for highest view recipes");
         setHighestViewRecipesLoading(true);
@@ -51,29 +50,17 @@ export default function UserHome() {
     }, []);
 
     useEffect(() => {
-        console.log('checking infinite loop from pages/user/Home.tsx for adding views to recipes');
-        if(recipeToShow && authContext.user && authContext.user._id !== (typeof recipeToShow.user === 'string' ? recipeToShow.user : recipeToShow.user._id)) {
+        console.log("checking infinite loop from pages/user/Home.tsx for adding views to recipes");
+        if (recipeToShow && authContext.user && authContext.user._id !== (typeof recipeToShow.user === "string" ? recipeToShow.user : recipeToShow.user._id)) {
             setLatestRecipes(prev => findInRecipeArrayAndAddOneView(prev, recipeToShow._id));
             setHighestViewRecipes(prev => findInRecipeArrayAndAddOneView(prev, recipeToShow._id));
-            console.log('added view in client');
+            console.log("added view in client");
         }
-    }, [recipeToShow, authContext.user])
+    }, [recipeToShow, authContext.user]);
 
+    const deleteRecipeAndRemoveFromHighestAndLatestRecipes = deleteRecipeInBackendAndRemoveRecipeFromStates(recipeToShow?._id, [setLatestRecipes, setHighestViewRecipes], () => setRecipeToShow(null));
 
-    if (recipeToShow)
-        return (
-            <div className="w-full">
-                {Preview(recipeToShow)(true)()()()()}
-                <button
-                    onClick={() => {
-                        setRecipeToShow(null);
-                    }}
-                    className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small"
-                >
-                    Back
-                </button>
-            </div>
-        );
+    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromHighestAndLatestRecipes}></RecipeDetail>;
 
     return (
         <div className="space-y-5">
@@ -87,13 +74,7 @@ export default function UserHome() {
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
                         {latestRecipesLoading && <div>Loading.....</div>}
-                        {!!latestRecipes.length &&
-                            !latestRecipesLoading &&
-                            latestRecipes.map((item: IRecipe) => (
-                                <React.Fragment key={item._id}>
-                                    {RecipeCard(item, authContext)(setRecipeToShow)}
-                                </React.Fragment>
-                            ))}
+                        {!!latestRecipes.length && !latestRecipesLoading && latestRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
                     </div>
                 </div>
             </div>
@@ -109,13 +90,7 @@ export default function UserHome() {
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
                         {highestViewRecipesLoading && <div>Loading.....</div>}
-                        {!!highestViewRecipes.length &&
-                            !latestRecipesLoading &&
-                            highestViewRecipes.map((item: IRecipe) => (
-                                <React.Fragment key={item._id}>
-                                    {RecipeCard(item, authContext)(setRecipeToShow)}
-                                </React.Fragment>
-                            ))}
+                        {!!highestViewRecipes.length && !latestRecipesLoading && highestViewRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
                     </div>
                 </div>
             </div>
@@ -123,6 +98,10 @@ export default function UserHome() {
         </div>
     );
 }
+
+
+
+// outside
 function getRecipesWithLimit(url: EnumRoutesForFetchingRecipesWithLimits): (limit: number) => Promise<IRecipe[]> {
     return async function (limit: number): Promise<IRecipe[]> {
         try {
@@ -138,10 +117,11 @@ function getRecipesWithLimit(url: EnumRoutesForFetchingRecipesWithLimits): (limi
     };
 }
 
-function findInRecipeArrayAndAddOneView (recipes : IRecipe[], _id : IRecipe['_id']) {
-    const newRecipes = recipes.map((item : IRecipe) => {
-        if(item._id === _id) return {...item, views : item.views + 1};
+function findInRecipeArrayAndAddOneView(recipes: IRecipe[], _id: IRecipe["_id"]) {
+    const newRecipes = recipes.map((item: IRecipe) => {
+        if (item._id === _id) return { ...item, views: item.views + 1 };
         else return item;
     });
     return newRecipes;
 }
+

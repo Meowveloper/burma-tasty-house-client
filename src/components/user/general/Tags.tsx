@@ -13,7 +13,7 @@ export default function Tags(props : IProps) {
                         {typeof item === 'string' ? item : item.name}
 
                         { !!props.removeTag && (
-                                <div onClick={() => { props.removeTag!(typeof item === 'string' ? i : item._id); }} className="dark:bg-dark-secondary-card w-[20px] h-[20px] text-center leading-[20px] text-small rounded-full">X</div>
+                                <div onClick={() => { props.removeTag!(typeof item === 'string' ? i : item._id); }} className="dark:bg-dark-secondary-card w-[20px] h-[20px] text-center leading-[20px] text-small rounded-full cursor-pointer">X</div>
                             )
                         }
                     </div>

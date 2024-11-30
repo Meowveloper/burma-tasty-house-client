@@ -5,6 +5,7 @@ import IUser from "../types/IUser";
 function appendRecipeToFormData (recipe : IRecipe, userId : IUser['_id']) : FormData {
         //form data
         const formData = new FormData();
+        if(recipe._id) formData.append("_id", recipe._id);
         formData.append("title", recipe.title);
         if (recipe.image && recipe.image instanceof File) formData.append("image", recipe.image);
         if (recipe.video && recipe.video instanceof File) formData.append("video", recipe.video);
@@ -32,7 +33,7 @@ function appendRecipeToFormData (recipe : IRecipe, userId : IUser['_id']) : Form
         if(recipe.tags) {
             recipe.tags.forEach((item : string | ITag) => {
                 if(typeof item === 'string') formData.append('tags', item);
-                else formData.append('tags', item.name); 
+                else formData.append('tags', JSON.stringify(item)); 
             })
         }
         return formData;

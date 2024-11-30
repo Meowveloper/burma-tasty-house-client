@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import IRecipe from "../../../types/IRecipe";
 import IStep from "../../../types/IStep";
 import StepValidator from "../../../utilities/StepValidator";
 import RecipeValidator from "../../../utilities/RecipeValidator";
 import updateObjectFields from "../../../utilities/updateObjectFields";
 import getFileUrl from "../../../utilities/getFileUrl";
+import { StepsToDeleteContext } from "../../../contexts/StepsToDeleteContext";
 
 interface IProps {
     recipe : IRecipe;
@@ -19,6 +20,7 @@ export default function Tab4(props : IProps) {
     const [ newDescription, setNewDescription ] = useState<string>('');
     const [ newImage, setNewImage ] = useState<File | string | null>(null);
     const updateRecipeSteps = updateObjectFields(props.recipe)("steps");
+    const stepsToDeleteContext = useContext(StepsToDeleteContext);
 
     useEffect(() => {
         console.log('checking infinite loop from components/user/RecipeForm/Tab4');
@@ -135,6 +137,8 @@ export default function Tab4(props : IProps) {
     function removeStep (sequence_number : number) : void 
     {
         const newSteps = removeStepFromArray(sequence_number, props.recipe.steps);
+        const stepToDeleteInBackend = getStepToDeleteInBackend(sequence_number, props.recipe.steps);
+        stepsToDeleteContext.setStepsToDelete(prev => stepToDeleteInBackend ? [...prev, stepToDeleteInBackend] : prev);
         props.setRecipe(updateRecipeSteps(newSteps));
     }
 
@@ -150,5 +154,14 @@ function addStepToArray(newStep : IStep, oldSteps : IRecipe['steps']) : IRecipe[
 }
 
 function removeStepFromArray(sequenceNumber: IStep['sequence_number'], steps: IRecipe['steps']): IRecipe['steps'] {
-  return steps.filter((item) => item.sequence_number !== sequenceNumber);
+  return steps.filter((item) => {
+    return item.sequence_number !== sequenceNumber
+  } );
+}
+
+function getStepToDeleteInBackend (sequenceNumber : IStep['sequence_number'], steps : IRecipe['steps']) : IStep['_id'] | null
+{
+    const step : IStep | undefined = steps.find((item) => item.sequence_number === sequenceNumber);
+    return step ? step._id : null;
+
 }
