@@ -1,10 +1,26 @@
 import IRecipe from "../../../types/IRecipe";
+import { useEffect, useRef } from "react";
+import io, { Socket } from "socket.io-client";
 
 interface IProps {
-    recipeId: IRecipe['_id'];
+    recipeId: IRecipe["_id"];
 }
-export default function CommentSection(props : IProps) {
-    console.log('recipe id from comment section', props.recipeId);
+export default function CommentSection(props: IProps) {
+    console.log("recipe id from comment section", props.recipeId);
+        console.log("recipe id from comment section", props.recipeId);
+    const socketRef = useRef<Socket | null>(null);
+
+    useEffect(() => {
+        console.log("checking useEffect from App.tsx");
+        const newSocket = io("http://localhost:8000");
+        socketRef.current = newSocket;
+        newSocket.on("connect", () => {
+            console.log("connected to socket");
+        });
+        return () => {
+            if (socketRef.current) socketRef.current.close();
+        };
+    }, []);
     return (
         <div className="w-full rounded-lg border py-2 px-5 my-4">
             <h3 className="font-bold">Discussion</h3>
