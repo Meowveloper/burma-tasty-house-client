@@ -96,7 +96,8 @@ export default function CommentSection(props: IProps) {
 
     function getConnectToSocketAndListenForNewComments() {
         return function () {
-            const newSocket = io("http://localhost:8000");
+            const backendUrl = import.meta.env.VITE_BACKEND_URL_WITHOUT_API as string;
+            const newSocket = io(backendUrl);
             socketRef.current = newSocket;
             socketRef.current.on("connect", () => {
                 console.log("connected to socket");
