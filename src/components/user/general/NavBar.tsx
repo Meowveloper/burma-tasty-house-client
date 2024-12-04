@@ -5,6 +5,7 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import axios from "../../../utilities/axios";
 import EnumAuthReducerActionTypes from "../../../types/EnumAuthReducerActionTypes";
 import { EnumUserRoutes } from "../../../types/EnumRoutes";
+import Notifications from "./Notifications";
 
 export default function NavBar() {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
@@ -17,6 +18,7 @@ export default function NavBar() {
                     <span className="self-center text-logo font-semibold whitespace-nowrap dark:text-dark-text-highlight">Logo</span>
                 </a>
                 <div className="flex items-center justify-start gap-2">
+                    <Notifications></Notifications>
                     <div className="">
                         {authContext.user && (
                             <div onClick={logout} className="text-h2 font-bold cursor-pointer">
