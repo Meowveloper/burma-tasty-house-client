@@ -9,8 +9,6 @@ interface IProps {
     recipeId: IRecipe["_id"];
 }
 export default function CommentSection(props: IProps) {
-    console.log("recipe id from comment section", props.recipeId);
-    console.log("recipe id from comment section", props.recipeId);
     const socketRef = useRef<Socket | null>(null);
     const [newCommentText, setNewCommentText] = useState<string>("");
     const authContext = useContext(AuthContext);
