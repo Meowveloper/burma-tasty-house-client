@@ -60,7 +60,7 @@ export default function Profile(): JSX.Element {
             </div>
 
             <div className="mt-5">
-                <div className="text-h1 font-bold mb-4">Your Recipes</div>
+                <div className="text-h1 font-bold mb-4">{user.name}'s Recipes</div>
                 <div className="grid grid-cols-2 desktop:grid-cols-3 gap-4">{!!recipes?.length && (recipes as IRecipe[]).map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}</div>
             </div>
         </div>

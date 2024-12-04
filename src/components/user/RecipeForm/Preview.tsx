@@ -4,6 +4,8 @@ import UserGeneralIngredients from "../general/Ingredients";
 import { Icon } from "@iconify/react";
 import IStep from "../../../types/IStep";
 import IUser from "../../../types/IUser";
+import { Link } from "react-router-dom";
+import { EnumUserRoutes } from "../../../types/EnumRoutes";
 // interface IProps {
 //     recipe: IRecipe;
 //     notPreview?: boolean;
@@ -70,8 +72,8 @@ export default function Preview(recipe: IRecipe) {
                                     <div className="col-span-12 border-b dark:border-dark-border pb-2">
                                         <div className="flex items-center gap-2">
                                             <div>Post owner - </div>
-                                            {!!recipe?.user && typeof recipe?.user === "string" && <div className="font-bold text-h3 cursor-pointer">{recipe.user}</div>}
-                                            {!!recipe?.user && typeof recipe?.user === "object" && <div className="font-bold text-h3 cursor-pointer">{recipe.user.name} { recipe.user._id === user?._id && <span> (YOU)</span>}</div> }
+                                            {!!recipe?.user && typeof recipe?.user === "string" && <Link to={`${EnumUserRoutes.Profile}/${recipe.user}`} className="font-bold text-h3 cursor-pointer">{recipe.user}</Link>}
+                                            {!!recipe?.user && typeof recipe?.user === "object" && <Link to={`${EnumUserRoutes.Profile}/${recipe.user._id}`} className="font-bold text-h3 cursor-pointer">{recipe.user.name} { recipe.user._id === user?._id && <span> (YOU)</span>}</Link> }
                                             {!recipe?.user && !user && <div className="dark:text-dark-card">No data...</div>}
                                         </div>
                                         <div className="flex items-center gap-2">

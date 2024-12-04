@@ -6,6 +6,8 @@ interface IComment {
     user : IUser['_id'] | IUser;
     body : string, 
     replies? : Array<IComment['_id']> | Array<IComment>;
+    createdAt? : string;
+    updatedAt? : string;
 }
 
 export default IComment;

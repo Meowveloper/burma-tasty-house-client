@@ -33,6 +33,7 @@ export default function CommentSection(props: IProps) {
         return () => {
             if (socketRef.current) socketRef.current.close();
         };
+
     }, [fetchAllComments, connectToSocketAndListenForNewComments]);
 
     return (
@@ -53,7 +54,7 @@ export default function CommentSection(props: IProps) {
 
                 {allComments.map((item: IComment) => (
                     <div key={item._id} className="flex flex-col mt-5">
-                        <div className="rounded-md p-3 my-3 dark:bg-dark-card">
+                        <div className="rounded-md p-3 my-3 dark:bg-dark-card relative">
                             <div className="flex gap-3 items-center">
                                 <img
                                     src={typeof item.user !== "string" && item.user.avatar ? item.user.avatar : "/image-placeholder.jpg"}
@@ -66,6 +67,11 @@ export default function CommentSection(props: IProps) {
                             </div>
 
                             <p className="mt-2 ms-2">{item.body}</p>
+                            {item.createdAt && (
+                                <div className="absolute bottom-2 right-4">
+                                    <span className="text-xs text-gray-500">{calculateTimeDifference(item.createdAt)}</span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -94,6 +100,7 @@ export default function CommentSection(props: IProps) {
         }
     }
 
+    // to use with useMemo hook
     function getConnectToSocketAndListenForNewComments() {
         return function () {
             const backendUrl = import.meta.env.VITE_BACKEND_URL_WITHOUT_API as string;
@@ -110,11 +117,12 @@ export default function CommentSection(props: IProps) {
         };
     }
 
+    // to use with useMemo hook
     function getFetchAllCommentsFunction() {
         return async function () {
             try {
                 const res = await axios.get("/comments/" + props.recipeId);
-                console.log(res);
+                console.log("comments", res.data.data);
                 setAllComments(res.data.data);
             } catch (e) {
                 console.log(e);
@@ -123,6 +131,22 @@ export default function CommentSection(props: IProps) {
     }
 
     function getArrayWithOneMoreComment(comment: IComment, oldComments: IComment[]) {
-        return [...oldComments, comment];
+        return [comment, ...oldComments];
+    }
+
+    function calculateTimeDifference(createdAt: IComment["createdAt"]) {
+        const now = new Date();
+        if (!createdAt) return "";
+        const createdAtDate = new Date(createdAt);
+        const timeDifference = now.getTime() - createdAtDate.getTime();
+        const seconds = Math.floor(timeDifference / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        if (days > 0) return `${days} day${days > 1 ? "s" : ""} ago`;
+        if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+        if (minutes > 0) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+        if (seconds > 0) return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
+        return "just now";
     }
 }
