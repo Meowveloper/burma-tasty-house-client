@@ -41,7 +41,7 @@ export default function Login() {
                         value={password}
                         className="dark:bg-dark-card rounded-small w-full px-3 py-2 outline-none"
                         placeholder="password"
-                        type="text"
+                        type="password"
                     />
                     <div className="text-center">
                         <button onClick={normalLogin} type="submit" className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[40px] rounded-small">

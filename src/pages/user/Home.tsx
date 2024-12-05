@@ -8,14 +8,18 @@ import { deleteRecipeInBackendAndRemoveRecipeFromStates } from "../../utilities/
 enum EnumRoutesForFetchingRecipesWithLimits {
     latest = "/recipes/latest",
     highestView = "/recipes/highest-view",
-    highestComment = "/recipes/highest-comment"
+    highestComment = "/recipes/highest-comment",
+    peopleYouFollowedLatestRecipes = "/recipes/people-you-followed/latest"
 }
 export default function UserHome() {
     const authContext = useContext(AuthContext);
     const [latestRecipes, setLatestRecipes] = useState<IRecipe[]>([]);
     const [highestViewRecipes, setHighestViewRecipes] = useState<IRecipe[]>([]);
+    const [ highestCommentRecipes, setHighestCommentRecipes ] = useState<IRecipe[]>([]);
     const [latestRecipesLoading, setLatestRecipesLoading] = useState<boolean>(false);
     const [highestViewRecipesLoading, setHighestViewRecipesLoading] = useState<boolean>(false);
+    const [ highestCommentRecipesLoading, setHighestCommentRecipesLoading ] = useState<boolean>(false);
+
     const [recipeToShow, setRecipeToShow] = useState<IRecipe | null>(null);
 
     const limit: Readonly<number> = 5;
@@ -26,6 +30,7 @@ export default function UserHome() {
         console.log("checking infinite loop from pages/user/Home.tsx");
         fetchLatestRecipes(); // limit = 5
         fetchHighestViewRecipes(); // limit = 5
+        fetchHighestCommentedRecipes(); // limit = 5
 
 
         
@@ -66,7 +71,7 @@ export default function UserHome() {
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
                         {highestViewRecipesLoading && <div>Loading.....</div>}
-                        {!!highestViewRecipes.length && !latestRecipesLoading && highestViewRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
+                        {!!highestViewRecipes.length && !highestCommentRecipesLoading && highestViewRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
                     </div>
                 </div>
             </div>
@@ -82,8 +87,8 @@ export default function UserHome() {
                 </div>
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
-                        {highestViewRecipesLoading && <div>Loading.....</div>}
-                        {!!highestViewRecipes.length && !latestRecipesLoading && highestViewRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
+                        {highestCommentRecipesLoading && <div>Loading.....</div>}
+                        {!!highestCommentRecipes.length && !highestCommentRecipesLoading && highestCommentRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
                     </div>
                 </div>
             </div>
@@ -121,6 +126,21 @@ export default function UserHome() {
             })
             .finally(() => {
                 setHighestViewRecipesLoading(false);
+            });
+    }
+
+    async function fetchHighestCommentedRecipes() {
+        setHighestCommentRecipesLoading(true);
+        const getHighestCommentedRecipesWithLimit = getRecipesWithLimit(EnumRoutesForFetchingRecipesWithLimits.highestComment);
+        getHighestCommentedRecipesWithLimit(limit)
+            .then(res => {
+                setHighestCommentRecipes(res);
+            })
+            .catch(e => {
+                console.log(e);
+            })
+            .finally(() => {
+                setHighestCommentRecipesLoading(false);
             });
     }
 
