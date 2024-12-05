@@ -7,8 +7,12 @@ interface IUser {
     password : string;
     avatar? : string;
     role : boolean;
-    recipes? : string[] | IRecipe[];
+    recipes? : IRecipe["_id"][] | IRecipe[];
     comments? : string;
+    followers? : Array<IUser["_id"] | IUser>;
+    followings? : Array<IUser["_id"] | IUser>;
+    createdAt? : string;
+    updatedAt? : string;
 }
 
 export default IUser;

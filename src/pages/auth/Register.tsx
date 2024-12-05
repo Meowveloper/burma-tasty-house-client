@@ -10,15 +10,16 @@ import { JwtPayloadForGoogleLogin } from "./Login";
 
 export default function Register() {
     const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
-    const [ name, setName ] = useState<string>('');
-    const [ email, setEmail ] = useState<string>('');
-    const [ password, setPassword ] = useState<string>('');
-    const [ normalRegisterLoading , setNormalRegisterLoading ] = useState<boolean>(false);
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [normalRegisterLoading, setNormalRegisterLoading] = useState<boolean>(false);
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
     return (
         <div>
-            <form className="px-3 mt-[50px]" onSubmit={ normalRegister }>
+            <form className="px-3 mt-[50px]" onSubmit={normalRegister}>
                 <div className="text-h1 font-bold mb-5 text-center">Burma Tasty House</div>
                 <div className="space-y-3">
                     <input
@@ -48,13 +49,15 @@ export default function Register() {
                         value={password}
                         className="dark:bg-dark-card rounded-small w-full px-3 py-2 outline-none"
                         placeholder="password"
-                        type="text"
+                        type="password"
                         required
                     />
+
+                    <input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)} value={confirmPassword} className="dark:bg-dark-card rounded-small w-full px-3 py-2 outline-none" type="password" placeholder="confirm password" />
                     <div className="text-center">
-                        <button type="submit" onClick={ normalRegister } className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[40px] rounded-small">
-                            { !normalRegisterLoading && <span>Register</span> }
-                            { normalRegisterLoading && <div className="auth-register-normal-register-loader mx-auto"></div> }
+                        <button type="submit" onClick={normalRegister} className="dark:bg-dark-elevate disabled:bg-dark-bg hover:dark:bg-dark-card w-[140px] h-[40px] rounded-small">
+                            {!normalRegisterLoading && <span>Register</span>}
+                            {normalRegisterLoading && <div className="auth-register-normal-register-loader mx-auto"></div>}
                         </button>
                     </div>
                 </div>
@@ -79,36 +82,44 @@ export default function Register() {
                 </div>
                 <div className="text-center mt-5">
                     already have an account? Login
-                    <NavLink to="/auth/login" className="font-bold text-dark-text-highlight cursor-pointer"> here</NavLink>.
+                    <NavLink to="/auth/login" className="font-bold text-dark-text-highlight cursor-pointer">
+                        {" "}
+                        here
+                    </NavLink>
+                    .
                 </div>
             </form>
         </div>
     );
 
-    function normalRegister (e : React.FormEvent) 
-    {
+    function normalRegister(e: React.FormEvent) {
         e.preventDefault();
+        if(password !== confirmPassword) return alert("passwords do not match");
         setNormalRegisterLoading(true);
         const data = {
-            name : name, 
-            email : email, 
-            password : password
-        }
+            name: name,
+            email: email,
+            password: password,
+        };
 
-        axios.post('/users/register', data).then(res => {
-            console.log(res.data.data);
-            if(res.status === 200) {
-                authContext.dispatch({ type : EnumAuthReducerActionTypes.LoginOrRegister, payload : res.data.data });
-                setName('');
-                setEmail('');
-                setPassword('');
-                navigate('/');
-            }
-        }).catch(err => {
-            console.log(err);
-        }).finally(() => {
-            setNormalRegisterLoading(false);
-        })
+        axios
+            .post("/users/register", data)
+            .then(res => {
+                console.log(res.data.data);
+                if (res.status === 200) {
+                    authContext.dispatch({ type: EnumAuthReducerActionTypes.LoginOrRegister, payload: res.data.data });
+                    setName("");
+                    setEmail("");
+                    setPassword("");
+                    navigate("/");
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                setNormalRegisterLoading(false);
+            });
     }
 
     function onGoogleLoginSuccess(credentialResponse: CredentialResponse) {
@@ -128,7 +139,8 @@ export default function Register() {
                         authContext.dispatch({ type: EnumAuthReducerActionTypes.LoginOrRegister, payload: res.data.data });
                         navigate(EnumUserRoutes.Home);
                     }
-                }).catch(e => {
+                })
+                .catch(e => {
                     console.log(e);
                     alert("error login with google");
                 });
