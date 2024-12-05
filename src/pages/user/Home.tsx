@@ -9,16 +9,20 @@ enum EnumRoutesForFetchingRecipesWithLimits {
     latest = "/recipes/latest",
     highestView = "/recipes/highest-view",
     highestComment = "/recipes/highest-comment",
-    peopleYouFollowedLatestRecipes = "/recipes/people-you-followed/latest"
+    peopleYouFollowRecipes = "/recipes/people-you-followed/latest"
 }
 export default function UserHome() {
     const authContext = useContext(AuthContext);
-    const [latestRecipes, setLatestRecipes] = useState<IRecipe[]>([]);
-    const [highestViewRecipes, setHighestViewRecipes] = useState<IRecipe[]>([]);
+    const [ latestRecipes, setLatestRecipes ] = useState<IRecipe[]>([]);
+    const [ highestViewRecipes, setHighestViewRecipes ] = useState<IRecipe[]>([]);
     const [ highestCommentRecipes, setHighestCommentRecipes ] = useState<IRecipe[]>([]);
-    const [latestRecipesLoading, setLatestRecipesLoading] = useState<boolean>(false);
-    const [highestViewRecipesLoading, setHighestViewRecipesLoading] = useState<boolean>(false);
+
+    const [ peopleYouFollowRecipes, setPeopleYouFollowRecipes ] = useState<IRecipe[]>([]);
+
+    const [ latestRecipesLoading, setLatestRecipesLoading ] = useState<boolean>(false);
+    const [ highestViewRecipesLoading, setHighestViewRecipesLoading ] = useState<boolean>(false);
     const [ highestCommentRecipesLoading, setHighestCommentRecipesLoading ] = useState<boolean>(false);
+    const [ peopleYouFollowRecipesLoading, setPeopleYouFollowRecipesLoading ] = useState<boolean>(false);
 
     const [recipeToShow, setRecipeToShow] = useState<IRecipe | null>(null);
 
@@ -31,7 +35,7 @@ export default function UserHome() {
         fetchLatestRecipes(); // limit = 5
         fetchHighestViewRecipes(); // limit = 5
         fetchHighestCommentedRecipes(); // limit = 5
-
+        fetchPeopleYouFollowRecipes(); // limit = 5
 
         
         addViewsToRecipes();
@@ -55,6 +59,7 @@ export default function UserHome() {
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
                         {latestRecipesLoading && <div>Loading.....</div>}
+                        { !latestRecipes.length && !latestRecipesLoading && <div>No recipes found..</div>}
                         {!!latestRecipes.length && !latestRecipesLoading && latestRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
                     </div>
                 </div>
@@ -71,6 +76,7 @@ export default function UserHome() {
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
                         {highestViewRecipesLoading && <div>Loading.....</div>}
+                        { !highestViewRecipes.length && !highestViewRecipesLoading && <div>No recipes found..</div>}
                         {!!highestViewRecipes.length && !highestCommentRecipesLoading && highestViewRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
                     </div>
                 </div>
@@ -88,11 +94,29 @@ export default function UserHome() {
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
                         {highestCommentRecipesLoading && <div>Loading.....</div>}
+                        { !highestCommentRecipes.length && !highestCommentRecipesLoading && <div>No recipes found..</div> }
                         {!!highestCommentRecipes.length && !highestCommentRecipesLoading && highestCommentRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
                     </div>
                 </div>
             </div>
             {/* popular by comments recipes end */}
+
+            {/* people you follow recipes */}
+            <div>
+                <div className="flex items-center gap-5">
+                    <div className="text-h2">Recipes of People You Follow</div>
+                    <div>{`>>`}</div>
+                    <div className="cursor-pointer underline">See more</div>
+                </div>
+                <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
+                    <div className="flex flex-row items-center gap-5 p-4">
+                        {peopleYouFollowRecipesLoading && <div>Loading.....</div>}
+                        {!peopleYouFollowRecipes.length && !peopleYouFollowRecipesLoading && <div>No recipes found, may be you did not follow anyone.</div>}
+                        {!!peopleYouFollowRecipes.length && !peopleYouFollowRecipesLoading && peopleYouFollowRecipes.map((item: IRecipe) => <React.Fragment key={item._id}>{RecipeCard(item, authContext)(setRecipeToShow)}</React.Fragment>)}
+                    </div>
+                </div>
+            </div>
+            {/* people you follow recipes end */}
         </div>
     );
 
@@ -141,6 +165,21 @@ export default function UserHome() {
             })
             .finally(() => {
                 setHighestCommentRecipesLoading(false);
+            });
+    }
+
+    async function fetchPeopleYouFollowRecipes() {
+        setPeopleYouFollowRecipesLoading(true);
+        const getPeopleYouFollowRecipesWithLimit = getRecipesWithLimit(EnumRoutesForFetchingRecipesWithLimits.peopleYouFollowRecipes);
+        getPeopleYouFollowRecipesWithLimit(limit)
+            .then(res => {
+                setPeopleYouFollowRecipes(res);
+            })
+            .catch(e => {
+                console.log(e);
+            })
+            .finally(() => {
+                setPeopleYouFollowRecipesLoading(false);
             });
     }
 
