@@ -13,7 +13,14 @@ import UserProfile from "../pages/user/Profile";
 import UnauthenticatedRoutes from "../components/general/UnAuthenticatedRoutes";
 import { StepsToDeleteContextProvider } from "../contexts/StepsToDeleteContext";
 import { TagsToDeleteContextProvider } from "../contexts/TagsToDeleteContext";
+import RecipesWithPagination from "../pages/user/RecipesWithPagination";
+import IRecipe from "../types/IRecipe";
 
+const recipeSorts : { [K in keyof Partial<IRecipe>] : K } = {
+    createdAt : 'createdAt',
+    views : 'views',
+    comments : 'comments'
+}
 export default function Routes() {
     const routes = createBrowserRouter([
         {
@@ -23,6 +30,26 @@ export default function Routes() {
                 {
                     path: EnumUserRoutes.Home,
                     element: <UserHome />,
+                },
+                {
+                    path : `${EnumUserRoutes.LatestRecipes}/:page`,
+                    element : <RecipesWithPagination sort={recipeSorts.createdAt!} needAuth={false}/>
+                },
+                {
+                    path : `${EnumUserRoutes.HighestViewRecipes}/:page`,
+                    element : <RecipesWithPagination sort={recipeSorts.views!} needAuth={false}/>
+                },
+                {
+                    path : `${EnumUserRoutes.HighestCommentRecipes}/:page`,
+                    element : <RecipesWithPagination sort={recipeSorts.comments!} needAuth={false}/>
+                },
+                {
+                    path : `${EnumUserRoutes.PeopleYouFollowRecipes}/:page`,
+                    element : (
+                        <ProtectedRoutes>
+                            <RecipesWithPagination sort={recipeSorts.createdAt!} needAuth={true}/>
+                        </ProtectedRoutes>
+                    )
                 },
                 {
                     path: EnumUserRoutes.RecipeCreate,

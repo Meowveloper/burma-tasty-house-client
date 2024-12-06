@@ -5,6 +5,8 @@ import RecipeCard from "../../components/user/general/RecipeCard";
 import { AuthContext } from "../../contexts/AuthContext";
 import RecipeDetail from "./RecipeDetail";
 import { deleteRecipeInBackendAndRemoveRecipeFromStates } from "../../utilities/generalHelperFunctions";
+import { NavLink } from "react-router-dom";
+import { EnumUserRoutes } from "../../types/EnumRoutes";
 enum EnumRoutesForFetchingRecipesWithLimits {
     latest = "/recipes/latest",
     highestView = "/recipes/highest-view",
@@ -43,9 +45,9 @@ export default function UserHome() {
 
 
 
-    const deleteRecipeAndRemoveFromHighestAndLatestRecipes = deleteRecipeInBackendAndRemoveRecipeFromStates(recipeToShow?._id, [setLatestRecipes, setHighestViewRecipes], () => setRecipeToShow(null));
+    const deleteRecipeAndRemoveFromAllRecipesLists = deleteRecipeInBackendAndRemoveRecipeFromStates(recipeToShow?._id, [setLatestRecipes, setHighestViewRecipes, setHighestCommentRecipes, setPeopleYouFollowRecipes], () => setRecipeToShow(null));
 
-    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromHighestAndLatestRecipes}></RecipeDetail>;
+    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromAllRecipesLists}></RecipeDetail>;
 
     return (
         <div className="space-y-5">
@@ -54,7 +56,7 @@ export default function UserHome() {
                 <div className="flex items-center gap-5">
                     <div className="text-h1">Latest Recipes</div>
                     <div>{`>>`}</div>
-                    <div className="cursor-pointer underline">See All Recipes</div>
+                    <NavLink to={`${EnumUserRoutes.LatestRecipes}/1`} className="cursor-pointer underline">See All Recipes</NavLink>
                 </div>
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
@@ -71,7 +73,7 @@ export default function UserHome() {
                 <div className="flex items-center gap-5">
                     <div className="text-h1">Popular by Views</div>
                     <div>{`>>`}</div>
-                    <div className="cursor-pointer underline">See more</div>
+                    <NavLink to={`${EnumUserRoutes.HighestViewRecipes}/1`} className="cursor-pointer underline">See more</NavLink>
                 </div>
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
@@ -89,7 +91,7 @@ export default function UserHome() {
                 <div className="flex items-center gap-5">
                     <div className="text-h1">Popular by Comments</div>
                     <div>{`>>`}</div>
-                    <div className="cursor-pointer underline">See more</div>
+                    <NavLink to={`${EnumUserRoutes.HighestCommentRecipes}/1`} className="cursor-pointer underline">See more</NavLink>
                 </div>
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">
@@ -106,7 +108,7 @@ export default function UserHome() {
                 <div className="flex items-center gap-5">
                     <div className="text-h2">Recipes of People You Follow</div>
                     <div>{`>>`}</div>
-                    <div className="cursor-pointer underline">See more</div>
+                    <NavLink to={`${EnumUserRoutes.PeopleYouFollowRecipes}/1`} className="cursor-pointer underline">See more</NavLink>
                 </div>
                 <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap">
                     <div className="flex flex-row items-center gap-5 p-4">

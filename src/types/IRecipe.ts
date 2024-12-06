@@ -1,6 +1,7 @@
 import IStep from "./IStep";
 import ITag from "./ITag";
 import IUser from "./IUser";
+import IComment from "./IComment";
 
 interface IRecipe {
     _id? : string;
@@ -14,6 +15,7 @@ interface IRecipe {
     ingredients : Array<string>;
     user : string | IUser;  
     views : number;
+    comments : Array<string | IComment>;
     steps : IStep[]; 
     createdAt? : Date; 
     updatedAt? : Date;
