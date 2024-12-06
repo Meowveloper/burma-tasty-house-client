@@ -46,8 +46,8 @@ export default function Profile(): JSX.Element {
 
     return (
         <div>
-            <div className="py-8 px-8 max-w-sm  bg-white dark:bg-dark-card rounded-xl shadow-lg space-y-2 sm:py-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6 mobile:mx-auto tablet:mx-0">
-                <img className="block mx-auto h-24 rounded-full sm:mx-0 sm:shrink-0 w-24" src="/image-placeholder.jpg" alt="Woman's Face" />
+            <div className="bg-dark-card px-4 py-5 rounded-xl w-fit">
+                <img className="block mx-auto h-24 rounded-full w-24 mb-5" src={user.avatar ? user.avatar : "/image-placeholder.jpg"} alt="user profile" />
                 <div className="text-center space-y-2 sm:text-left">
                     <div className="space-y-0.5">
                         <p className="text-lg  font-semibold">

@@ -14,9 +14,9 @@ export default function NavBar() {
     return (
         <nav className="bg-white dark:bg-[#1E1F22] relative">
             <div className="w-full flex flex-wrap items-center justify-between px-4 py-5 tablet:px-10 desktop:px-[100px]">
-                <a className="flex items-center space-x-3 rtl:space-x-reverse">
+                <NavLink to={EnumUserRoutes.Home} className="flex items-center space-x-3 rtl:space-x-reverse">
                     <span className="self-center text-logo font-semibold whitespace-nowrap dark:text-dark-text-highlight">Logo</span>
-                </a>
+                </NavLink>
                 <div className="flex items-center justify-start gap-2">
                     <Notifications></Notifications>
                     <div className="">
