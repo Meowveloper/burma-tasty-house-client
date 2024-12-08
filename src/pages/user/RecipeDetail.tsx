@@ -17,7 +17,17 @@ export default function RecipeDetail(props: IProps) {
     console.log("location", location.pathname);
     return (
         <div className="w-full">
+            <button
+                onClick={() => {
+                    props.setRecipeToShow(null);
+                }}
+                className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small mb-5"
+            >
+                Back
+            </button>
+
             {Preview(props.recipeToShow)(true)()()()(props.user)}
+
             <button
                 onClick={() => {
                     props.setRecipeToShow(null);
@@ -42,9 +52,33 @@ export default function RecipeDetail(props: IProps) {
                     </button>
                 </>
             )}
+
+            {props.user && props.user._id !== recipeUserId && (
+                checkIfAlreadySaved(props.recipeToShow._id, props.user.saves) ? (
+                    <button className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small ms-3">
+                        saved
+                    </button>
+                ) : (
+                    <button className="dark:bg-dark-card px-4 py-2 cursor-pointer rounded-small ms-3">
+                        save
+                    </button>
+                )
+            )}
             {/* comments */}
             <CommentSection recipeId={props.recipeToShow._id}></CommentSection>
             {/* comments end */}
         </div>
     );
+}
+
+function checkIfAlreadySaved(recipeId: IRecipe['_id'], userSavedRecipes: IUser['saves']) : boolean {
+    if(!userSavedRecipes) return false;
+    const savedIds = userSavedRecipes.map((recipe) => {
+        if(recipe) {
+            if(typeof recipe === 'string') return recipe;
+            return recipe._id;
+        }
+    }); 
+
+    return savedIds.includes(recipeId);
 }
