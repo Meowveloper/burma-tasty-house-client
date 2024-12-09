@@ -11,6 +11,7 @@ interface IUser {
     comments? : string;
     followers? : Array<IUser["_id"] | IUser>;
     followings? : Array<IUser["_id"] | IUser>;
+    saves? : Array<IRecipe["_id"] | IRecipe>;
     createdAt? : string;
     updatedAt? : string;
 }
