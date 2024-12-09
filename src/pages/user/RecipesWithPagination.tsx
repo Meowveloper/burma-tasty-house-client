@@ -33,7 +33,7 @@ export default function RecipesWithPagination(props: IProps) {
 
     const deleteRecipeAndRemoveFromRecipes = deleteRecipeInBackendAndRemoveRecipeFromStates(recipeToShow?._id, [setRecipes], () => setRecipeToShow(null));
 
-    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromRecipes}></RecipeDetail>;
+    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromRecipes}></RecipeDetail>;
 
     return (
         <div>
