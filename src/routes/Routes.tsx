@@ -15,6 +15,9 @@ import { StepsToDeleteContextProvider } from "../contexts/StepsToDeleteContext";
 import { TagsToDeleteContextProvider } from "../contexts/TagsToDeleteContext";
 import RecipesWithPagination from "../pages/user/RecipesWithPagination";
 import IRecipe from "../types/IRecipe";
+import SavedRecipes from "../pages/user/SavedRecipes";
+import PeopleYouFollowed from "../pages/user/PeopleYouFollowed";
+import YourFollowers from "../pages/user/YourFollowers";
 
 const recipeSorts : { [K in keyof Partial<IRecipe>] : K } = {
     createdAt : 'createdAt',
@@ -48,6 +51,30 @@ export default function Routes() {
                     element : (
                         <ProtectedRoutes>
                             <RecipesWithPagination sort={recipeSorts.createdAt!} needAuth={true}/>
+                        </ProtectedRoutes>
+                    )
+                },
+                {
+                    path : `${EnumUserRoutes.SavedRecipes}`, 
+                    element : (
+                        <ProtectedRoutes>
+                            <SavedRecipes></SavedRecipes>
+                        </ProtectedRoutes>
+                    ) 
+                },
+                {
+                    path: EnumUserRoutes.PeopleYouFollowed, 
+                    element: (
+                        <ProtectedRoutes>
+                            <PeopleYouFollowed></PeopleYouFollowed>
+                        </ProtectedRoutes>
+                    )
+                }, 
+                {
+                    path: EnumUserRoutes.YourFollowers, 
+                    element: (
+                        <ProtectedRoutes>
+                            <YourFollowers></YourFollowers>
                         </ProtectedRoutes>
                     )
                 },
