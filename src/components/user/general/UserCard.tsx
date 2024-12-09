@@ -15,7 +15,7 @@ export default function UserCard({ user, authContext }: IProps) {
                     <div className="text-lg font-semibold w-full text-wrap break-words">
                         {user.name} {user._id === authContext.user?._id && <span className="font-bold dark:text-dark-text-highlight">(You)</span>}
                     </div>
-                    <p className="text-slate-500 font-medium">{user.email}</p>
+                    <p className="text-slate-500 font-medium w-full text-wrap break-words">{user.email}</p>
                 </div>
             </div>
         </Link>
