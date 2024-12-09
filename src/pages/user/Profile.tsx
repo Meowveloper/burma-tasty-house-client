@@ -42,7 +42,7 @@ export default function Profile(): JSX.Element {
         setRecipeToShow(null);
     });
 
-    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromUserRecipes} />;
+    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromUserRecipes} />;
 
     return (
         <div>

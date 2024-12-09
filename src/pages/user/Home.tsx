@@ -47,7 +47,7 @@ export default function UserHome() {
 
     const deleteRecipeAndRemoveFromAllRecipesLists = deleteRecipeInBackendAndRemoveRecipeFromStates(recipeToShow?._id, [setLatestRecipes, setHighestViewRecipes, setHighestCommentRecipes, setPeopleYouFollowRecipes], () => setRecipeToShow(null));
 
-    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} user={authContext.user} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromAllRecipesLists}></RecipeDetail>;
+    if (recipeToShow) return <RecipeDetail recipeToShow={recipeToShow} setRecipeToShow={setRecipeToShow} deleteRecipe={deleteRecipeAndRemoveFromAllRecipesLists}></RecipeDetail>;
 
     return (
         <div className="space-y-5">

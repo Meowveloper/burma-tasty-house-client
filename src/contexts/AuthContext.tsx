@@ -16,7 +16,7 @@ interface AuthState
 
 type AuthAction = { type : EnumAuthReducerActionTypes.LoginOrRegister, payload : IUser } | { type : EnumAuthReducerActionTypes.Logout };
 
-interface AuthContextType extends AuthState 
+export interface AuthContextType extends AuthState 
 {
     dispatch : Dispatch<AuthAction>;
     loading : boolean;
