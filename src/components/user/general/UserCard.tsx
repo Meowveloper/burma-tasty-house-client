@@ -8,7 +8,7 @@ interface IProps {
 }
 export default function UserCard({ user, authContext }: IProps) {
     return (
-        <Link to={`${EnumUserRoutes.Profile}/${user._id}`} className="bg-dark-card px-4 py-5 rounded-xl w-fit">
+        <Link to={`${EnumUserRoutes.Profile}/${user._id}`} className="bg-dark-card px-4 py-5 rounded-xl w-fit block">
             <img className="block mx-auto h-24 rounded-full w-24 mb-5" src={user.avatar ? user.avatar : "/image-placeholder.jpg"} alt="user profile" />
             <div className="text-center space-y-2 sm:text-left">
                 <div className="space-y-0.5">
