@@ -6,7 +6,7 @@ import IUser from "../../types/IUser";
 import IRecipe from "../../types/IRecipe";
 import RecipeCard from "../../components/user/general/RecipeCard";
 import RecipeDetail from "./RecipeDetail";
-import { deleteRecipeInBackendAndRemoveRecipeFromStates } from "../../utilities/generalHelperFunctions";
+import { deleteRecipeInBackendAndRemoveRecipeFromStates, getAvatarUrl } from "../../utilities/generalHelperFunctions";
 import EnumAuthReducerActionTypes from "../../types/EnumAuthReducerActionTypes";
 export default function Profile(): JSX.Element {
     const authContext = useContext(AuthContext);
@@ -47,7 +47,7 @@ export default function Profile(): JSX.Element {
     return (
         <div>
             <div className="bg-dark-card px-4 py-5 rounded-xl w-fit">
-                <img className="block mx-auto h-24 rounded-full w-24 mb-5" src={user.avatar ? user.avatar : "/image-placeholder.jpg"} alt="user profile" />
+                <img className="block mx-auto h-24 rounded-full w-24 mb-5" src={getAvatarUrl(user.avatar)} alt="user profile" />
                 <div className="text-center space-y-2 sm:text-left">
                     <div className="space-y-0.5">
                         <p className="text-lg  font-semibold">

@@ -4,6 +4,7 @@ import io, { Socket } from "socket.io-client";
 import IComment from "../../../types/IComment";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axios from "../../../utilities/axios";
+import { getAvatarUrl } from "../../../utilities/generalHelperFunctions";
 
 interface IProps {
     recipeId: IRecipe["_id"];
@@ -55,7 +56,7 @@ export default function CommentSection(props: IProps) {
                         <div className="rounded-md p-3 my-3 dark:bg-dark-card relative">
                             <div className="flex gap-3 items-center">
                                 <img
-                                    src={typeof item.user !== "string" && item.user.avatar ? item.user.avatar : "/image-placeholder.jpg"}
+                                    src={getAvatarUrl(typeof item.user === "string" ? "" : item.user.avatar)}
                                     className="object-cover w-8 h-8 rounded-full 
                                     border-2 border-emerald-400  shadow-emerald-400
                                     "

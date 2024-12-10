@@ -13,11 +13,12 @@ import UserProfile from "../pages/user/Profile";
 import UnauthenticatedRoutes from "../components/general/UnAuthenticatedRoutes";
 import { StepsToDeleteContextProvider } from "../contexts/StepsToDeleteContext";
 import { TagsToDeleteContextProvider } from "../contexts/TagsToDeleteContext";
-import RecipesWithPagination from "../pages/user/RecipesWithPagination";
+import UserRecipesWithPagination from "../pages/user/RecipesWithPagination";
 import IRecipe from "../types/IRecipe";
 import SavedRecipes from "../pages/user/SavedRecipes";
 import PeopleYouFollowed from "../pages/user/PeopleYouFollowed";
 import YourFollowers from "../pages/user/YourFollowers";
+import UserProfileEdit from "../pages/user/ProfileEdit";
 
 const recipeSorts : { [K in keyof Partial<IRecipe>] : K } = {
     createdAt : 'createdAt',
@@ -36,21 +37,21 @@ export default function Routes() {
                 },
                 {
                     path : `${EnumUserRoutes.LatestRecipes}/:page`,
-                    element : <RecipesWithPagination sort={recipeSorts.createdAt!} needAuth={false}/>
+                    element : <UserRecipesWithPagination sort={recipeSorts.createdAt!} needAuth={false}/>
                 },
                 {
                     path : `${EnumUserRoutes.HighestViewRecipes}/:page`,
-                    element : <RecipesWithPagination sort={recipeSorts.views!} needAuth={false}/>
+                    element : <UserRecipesWithPagination sort={recipeSorts.views!} needAuth={false}/>
                 },
                 {
                     path : `${EnumUserRoutes.HighestCommentRecipes}/:page`,
-                    element : <RecipesWithPagination sort={recipeSorts.comments!} needAuth={false}/>
+                    element : <UserRecipesWithPagination sort={recipeSorts.comments!} needAuth={false}/>
                 },
                 {
                     path : `${EnumUserRoutes.PeopleYouFollowRecipes}/:page`,
                     element : (
                         <ProtectedRoutes>
-                            <RecipesWithPagination sort={recipeSorts.createdAt!} needAuth={true}/>
+                            <UserRecipesWithPagination sort={recipeSorts.createdAt!} needAuth={true}/>
                         </ProtectedRoutes>
                     )
                 },
@@ -109,6 +110,14 @@ export default function Routes() {
                             <UserProfile />
                         </ProtectedRoutes>
                     ),
+                },
+                {
+                    path: EnumUserRoutes.ProfileEdit, 
+                    element: (
+                        <ProtectedRoutes>
+                            <UserProfileEdit></UserProfileEdit>
+                        </ProtectedRoutes>
+                    )
                 },
                 {
                     path: "*",

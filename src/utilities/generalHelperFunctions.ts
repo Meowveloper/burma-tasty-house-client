@@ -1,5 +1,6 @@
 import axios from "./axios";
 import IRecipe from "../types/IRecipe";
+import IUser from "../types/IUser";
 export async function deleteRecipeInBackend(id: string): Promise<void> {
     try {
         const isConfirm = window.confirm("Are you sure you want to delete this recipe?");
@@ -32,4 +33,9 @@ export function deleteRecipeInBackendAndRemoveRecipeFromStates(recipeId: IRecipe
             callbackFunction();
         }
     };
+}
+export function getAvatarUrl (avatar : IUser["avatar"]) : string {
+    if (!avatar) return "/image-placeholder.jpg";
+    if (typeof avatar === "string") return avatar;
+    return URL.createObjectURL(avatar);
 }
