@@ -5,7 +5,7 @@ interface IUser {
     name : string;
     email : string;
     password : string;
-    avatar? : string;
+    avatar? : string | File;
     role : boolean;
     recipes? : IRecipe["_id"][] | IRecipe[];
     comments? : string;

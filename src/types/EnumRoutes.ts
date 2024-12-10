@@ -1,5 +1,6 @@
 export enum EnumUserRoutes {
     Home = '/', 
+    ProfileEdit = '/profile-edit',
     LatestRecipes = '/latest-recipes',
     HighestViewRecipes = '/highest-view-recipes',
     HighestCommentRecipes = '/highest-comment-recipes',
