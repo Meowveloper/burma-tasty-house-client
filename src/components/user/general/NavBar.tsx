@@ -41,6 +41,18 @@ export default function NavBar() {
                                 </div>
                                 <div className="ps-5 py-3 border-b border-dark-text">
                                     <NavLink
+                                        to={`${EnumUserRoutes.Browse}/1`}
+                                        onClick={() => {
+                                            setShowMobileMenu(false);
+                                        }}
+                                        className={({ isActive }) => `${isActive ? "dark:text-dark-text-highlight" : "dark:text-dark-text"}`}
+                                    >
+                                        Search
+                                    </NavLink>
+                                </div>
+                                
+                                <div className="ps-5 py-3 border-b border-dark-text">
+                                    <NavLink
                                         to={EnumUserRoutes.RecipeCreate}
                                         onClick={() => {
                                             setShowMobileMenu(false);
