@@ -6,6 +6,7 @@ import EnumAuthReducerActionTypes from "../../types/EnumAuthReducerActionTypes";
 import { EnumUserRoutes } from "../../types/EnumRoutes";
 import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import GoogleLoginWarning from "../../components/general/GoogleLoginWarning";
 
 export interface JwtPayloadForGoogleLogin extends JwtPayload {
     email: string;
@@ -69,7 +70,7 @@ export default function Login() {
                         </GoogleOAuthProvider>
                     </div>
                 </div>
-                <div className="text-center mt-5">
+                <div className="text-center my-5">
                     does not have an account? Register
                     <NavLink to="/auth/register" className="font-bold text-dark-text-highlight cursor-pointer">
                         {" "}
@@ -77,6 +78,7 @@ export default function Login() {
                     </NavLink>
                     .
                 </div>
+                <GoogleLoginWarning></GoogleLoginWarning>
             </form>
         </div>
     );
