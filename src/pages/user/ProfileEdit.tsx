@@ -6,6 +6,7 @@ import axios from '../../utilities/axios';
 import EnumAuthReducerActionTypes from "../../types/EnumAuthReducerActionTypes";
 import { useNavigate } from "react-router-dom";
 import { EnumUserRoutes } from "../../types/EnumRoutes";
+import GoogleLoginWarning from "../../components/general/GoogleLoginWarning";
 export default function ProfileEdit() {
     const authContext = useContext(AuthContext);
     const hiddenImageInput = useRef<HTMLInputElement>(null);
@@ -25,7 +26,7 @@ export default function ProfileEdit() {
         <div>
             <div className="text-h2 font-bold">Edit your profile</div>
             <div className="text-red-400 font-bold">Please note that you cannot change your email.</div>
-            <div className="text-red-400 font-bold">Users who used google login cannot change their password because we do NOT store password or any other sensitive information of your google account in our database. Your account will be safe as long as your google account is safe. </div>
+            <GoogleLoginWarning></GoogleLoginWarning>
             <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
                 {/* name */}
                 <div>

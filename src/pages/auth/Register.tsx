@@ -7,6 +7,7 @@ import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from "@react-oau
 import { EnumUserRoutes } from "../../types/EnumRoutes";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayloadForGoogleLogin } from "./Login";
+import GoogleLoginWarning from "../../components/general/GoogleLoginWarning";
 
 export default function Register() {
     const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
@@ -80,7 +81,7 @@ export default function Register() {
                         </GoogleOAuthProvider>
                     </div>
                 </div>
-                <div className="text-center mt-5">
+                <div className="text-center my-5">
                     already have an account? Login
                     <NavLink to="/auth/login" className="font-bold text-dark-text-highlight cursor-pointer">
                         {" "}
@@ -88,6 +89,8 @@ export default function Register() {
                     </NavLink>
                     .
                 </div>
+
+                <GoogleLoginWarning></GoogleLoginWarning>
             </form>
         </div>
     );

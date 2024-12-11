@@ -5,6 +5,7 @@ import IComment from "../../../types/IComment";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axios from "../../../utilities/axios";
 import { getAvatarUrl } from "../../../utilities/generalHelperFunctions";
+import ReportPopUp from "../general/ReportPopUp";
 
 interface IProps {
     recipeId: IRecipe["_id"];
@@ -54,15 +55,20 @@ export default function CommentSection(props: IProps) {
                 {allComments.map((item: IComment) => (
                     <div key={item._id} className="flex flex-col mt-5">
                         <div className="rounded-md p-3 my-3 dark:bg-dark-card relative">
-                            <div className="flex gap-3 items-center">
-                                <img
-                                    src={getAvatarUrl(typeof item.user === "string" ? "" : item.user.avatar)}
-                                    className="object-cover w-8 h-8 rounded-full 
-                                    border-2 border-emerald-400  shadow-emerald-400
-                                    "
-                                />
+                            <div className="flex items-center justify-between">
+                                <div className="flex gap-3 items-center">
+                                    <img
+                                        src={getAvatarUrl(typeof item.user === "string" ? "" : item.user.avatar)}
+                                        className="object-cover w-8 h-8 rounded-full 
+                                        border-2 border-emerald-400  shadow-emerald-400
+                                        "
+                                    />
 
-                                <h3 className="text-dark-text-highlight font-bold">{typeof item.user === "string" ? "error" : item.user.name}</h3>
+                                    <h3 className="text-dark-text-highlight font-bold">{typeof item.user === "string" ? "error" : item.user.name}</h3>
+                                </div>
+                                <ReportPopUp recipeId={props.recipeId} commentId={item._id}>
+                                    <div className="text-sm font-bold text-dark-border">Report this comment.</div>     
+                                </ReportPopUp> 
                             </div>
 
                             <p className="mt-2 ms-2">{item.body}</p>
