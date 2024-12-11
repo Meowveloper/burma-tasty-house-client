@@ -21,19 +21,21 @@ export default function ReportPopUp(props: IProps) {
     const [body, setBody] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const popOverDiv = useRef<HTMLDivElement>(null);
+    console.log('comment id', props.commentId);
 
     return (
         <div>
-            <button type="button" popovertarget="report-popover" popovertargetaction="show">
+            <button type="button" popovertarget={`report-popover-${props.commentId ? props.commentId : props.recipeId }`} popovertargetaction="show">
                 {props.children}
             </button>
 
-            <div ref={popOverDiv} id="report-popover" popover="manual" className="fixed top-0 left-0 w-full h-full bg-transparent">
+            <div ref={popOverDiv} id={`report-popover-${props.commentId ? props.commentId : props.recipeId}`} popover="manual" className="fixed top-0 left-0 w-full h-full bg-transparent">
                 <div className="bg-white p-5 shadow-md shadow-gray-300 rounded-small w-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <div>{props.commentId ? props.commentId : "Recipe"}</div>
                     <div className="flex justify-between items-center mb-5">
                         <div className="text-h3 font-bold">Reason of report</div>
                         {!loading && (
-                            <button type="button" popovertarget="report-popover" popovertargetaction="hide" className="text-gray-500 text-h2 font-bold">
+                            <button type="button" popovertarget={`report-popover-${props.commentId ? props.commentId : props.recipeId }`} popovertargetaction="hide" className="text-gray-500 text-h2 font-bold">
                                 x
                             </button>
                         )}
