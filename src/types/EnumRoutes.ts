@@ -12,7 +12,8 @@ export enum EnumUserRoutes {
     RecipeUpdate = '/recipe-update',
     Login = '/auth/login', 
     Register = '/auth/register', 
-    Profile = '/profile'
+    Profile = '/profile',
+    Browse = '/browse',
 }
 
 export enum EnumAdminRoutes {

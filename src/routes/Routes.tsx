@@ -19,6 +19,7 @@ import SavedRecipes from "../pages/user/SavedRecipes";
 import PeopleYouFollowed from "../pages/user/PeopleYouFollowed";
 import YourFollowers from "../pages/user/YourFollowers";
 import UserProfileEdit from "../pages/user/ProfileEdit";
+import Browse from "../pages/user/Browse";
 
 const recipeSorts : { [K in keyof Partial<IRecipe>] : K } = {
     createdAt : 'createdAt',
@@ -46,6 +47,10 @@ export default function Routes() {
                 {
                     path : `${EnumUserRoutes.HighestCommentRecipes}/:page`,
                     element : <UserRecipesWithPagination sort={recipeSorts.comments!} needAuth={false}/>
+                },
+                {
+                    path : `${EnumUserRoutes.Browse}/:page`,
+                    element : <Browse sort={recipeSorts.createdAt!}></Browse>
                 },
                 {
                     path : `${EnumUserRoutes.PeopleYouFollowRecipes}/:page`,

@@ -8,28 +8,32 @@ import RecipeCard from "../../components/user/general/RecipeCard";
 import { AuthContext } from "../../contexts/AuthContext";
 import { deleteRecipeInBackendAndRemoveRecipeFromStates } from "../../utilities/generalHelperFunctions";
 import RecipeDetail from "./RecipeDetail";
+import ITag from "../../types/ITag";
 
 interface IProps {
     sort: string;
     needAuth: boolean;
+    tagId? : ITag['_id']
 }
 export default function RecipesWithPagination(props: IProps) {
     const routeParams = useParams();
     const page: number = Number(routeParams.page) || 1;
+    console.log("page", page);
     const apiUrl: string = "/recipes/sort-with-pagination";
     const authContext = useContext(AuthContext);
     const [recipes, setRecipes] = useState<IRecipe[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [pagination, setPagination] = useState<IPagination | null>(null);
 
-    const fetchRecipes: (baseUrl: string) => Promise<void> = useMemo(() => getFetchRecipesFunction(page, props.sort, props.needAuth), [page, props.sort, props.needAuth]);
+    const fetchRecipes: (baseUrl: string) => Promise<void> = useMemo(() => getFetchRecipesFunction(page, props.sort, props.needAuth, props.tagId), [page, props.sort, props.needAuth, props.tagId]);
 
     const [recipeToShow, setRecipeToShow] = useState<IRecipe | null>(null);
 
     useEffect(() => {
         console.log("checking infinite loop from pages/user/LatestRecipes");
         fetchRecipes(apiUrl);
-    }, [fetchRecipes]);
+        setRecipeToShow(null);
+    }, [fetchRecipes, props.tagId]);
 
     const deleteRecipeAndRemoveFromRecipes = deleteRecipeInBackendAndRemoveRecipeFromStates(recipeToShow?._id, [setRecipes], () => setRecipeToShow(null));
 
@@ -37,7 +41,9 @@ export default function RecipesWithPagination(props: IProps) {
 
     return (
         <div>
-            <div className="text-h2 font-bold mb-2">{getTitle(props.sort, props.needAuth)}</div>
+            { !props.tagId && (
+                <div className="text-h2 font-bold mb-2">{getTitle(props.sort, props.needAuth)}</div>
+            ) }
             {loading && <div>Loading...</div>}
             {!!pagination && !!pagination.totalPages && !loading && <Pagination page={page} totalPages={pagination.totalPages} total={pagination.total} totalShowed={recipes.length} />}
             <div className="grid grid-cols-2 desktop:grid-cols-4 tablet:grid-cols-3 gap-4 mt-5">
@@ -47,9 +53,9 @@ export default function RecipesWithPagination(props: IProps) {
         </div>
     );
 
-    function getFetchRecipesFunction(page: number, sort: string, needAuth: boolean): (baseUrl: string) => Promise<void> {
+    function getFetchRecipesFunction(page: number, sort: string, needAuth: boolean, tagId : IProps['tagId']): (baseUrl: string) => Promise<void> {
         return async function (baseUrl: string): Promise<void> {
-            const url = `${baseUrl}/${page}?sort=${sort}&needAuth=${needAuth ? 1 : 0}`;
+            const url = `${baseUrl}/${page}?sort=${sort}&needAuth=${needAuth ? 1 : 0}${tagId ? `&tag=${tagId}` : ''}`;
             try {
                 setLoading(true);
                 const getRecipesWithPagination = getFetchRecipesWithPaginationFunction<IRecipe[]>(url);
