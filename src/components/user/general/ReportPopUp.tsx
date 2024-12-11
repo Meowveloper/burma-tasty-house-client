@@ -31,7 +31,6 @@ export default function ReportPopUp(props: IProps) {
 
             <div ref={popOverDiv} id={`report-popover-${props.commentId ? props.commentId : props.recipeId}`} popover="manual" className="fixed top-0 left-0 w-full h-full bg-transparent">
                 <div className="bg-white p-5 shadow-md shadow-gray-300 rounded-small w-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div>{props.commentId ? props.commentId : "Recipe"}</div>
                     <div className="flex justify-between items-center mb-5">
                         <div className="text-h3 font-bold">Reason of report</div>
                         {!loading && (
