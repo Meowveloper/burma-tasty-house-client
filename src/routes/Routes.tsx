@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import UserLayout from "../layouts/UserLayout";
 import UserHome from "../pages/user/Home";
 import AdminLayout from "../layouts/AdminLayout";
-import AdminHome from "../pages/admin/AdminHome";
+import AdminHome from "../pages/admin/Home";
 import UserRecipeCreate from "../pages/user/RecipeCreate";
 import UserRecipeUpdate from "../pages/user/RecipeUpdate";
 import Login from "../pages/auth/Login";
@@ -20,6 +20,8 @@ import PeopleYouFollowed from "../pages/user/PeopleYouFollowed";
 import YourFollowers from "../pages/user/YourFollowers";
 import UserProfileEdit from "../pages/user/ProfileEdit";
 import Browse from "../pages/user/Browse";
+import UnProtectedRoutes from "../components/general/UnProtectedRoutes";
+import AdminReports from "../pages/admin/Reports";
 
 const recipeSorts : { [K in keyof Partial<IRecipe>] : K } = {
     createdAt : 'createdAt',
@@ -34,23 +36,43 @@ export default function Routes() {
             children: [
                 {
                     path: EnumUserRoutes.Home,
-                    element: <UserHome />,
+                    element: (
+                        <UnProtectedRoutes>
+                            <UserHome />
+                        </UnProtectedRoutes>
+                    ),
                 },
                 {
                     path : `${EnumUserRoutes.LatestRecipes}/:page`,
-                    element : <UserRecipesWithPagination sort={recipeSorts.createdAt!} needAuth={false}/>
+                    element : (
+                        <UnProtectedRoutes>
+                            <UserRecipesWithPagination sort={recipeSorts.createdAt!} needAuth={false}/>
+                        </UnProtectedRoutes>
+                    )
                 },
                 {
                     path : `${EnumUserRoutes.HighestViewRecipes}/:page`,
-                    element : <UserRecipesWithPagination sort={recipeSorts.views!} needAuth={false}/>
+                    element : (
+                        <UnProtectedRoutes>
+                            <UserRecipesWithPagination sort={recipeSorts.views!} needAuth={false}/>
+                        </UnProtectedRoutes>
+                    )
                 },
                 {
                     path : `${EnumUserRoutes.HighestCommentRecipes}/:page`,
-                    element : <UserRecipesWithPagination sort={recipeSorts.comments!} needAuth={false}/>
+                    element : (
+                        <UnProtectedRoutes>
+                            <UserRecipesWithPagination sort={recipeSorts.comments!} needAuth={false}/>
+                        </UnProtectedRoutes>
+                    )
                 },
                 {
                     path : `${EnumUserRoutes.Browse}/:page`,
-                    element : <Browse sort={recipeSorts.createdAt!}></Browse>
+                    element : (
+                        <UnProtectedRoutes>
+                            <Browse sort={recipeSorts.createdAt!}></Browse>
+                        </UnProtectedRoutes>
+                    )
                 },
                 {
                     path : `${EnumUserRoutes.PeopleYouFollowRecipes}/:page`,
@@ -135,7 +157,7 @@ export default function Routes() {
             ],
         },
         {
-            path: "/admin",
+            path: "/",
             element: <AdminLayout />,
             children: [
                 {
@@ -145,6 +167,14 @@ export default function Routes() {
                             <AdminHome />
                         </ProtectedRoutes>
                     ),
+                },
+                {
+                    path : EnumAdminRoutes.Reports, 
+                    element : (
+                        <ProtectedRoutes isAdminRoute={true}>
+                            <AdminReports></AdminReports>
+                        </ProtectedRoutes>
+                    )
                 },
                 {
                     path: "*",

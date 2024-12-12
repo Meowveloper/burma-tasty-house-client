@@ -17,5 +17,6 @@ export enum EnumUserRoutes {
 }
 
 export enum EnumAdminRoutes {
-    Home = ''
+    Home = '/admin', 
+    Reports = '/admin/reports',
 }

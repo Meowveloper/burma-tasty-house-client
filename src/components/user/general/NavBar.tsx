@@ -2,10 +2,9 @@ import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../../contexts/AuthContext";
-import axios from "../../../utilities/axios";
-import EnumAuthReducerActionTypes from "../../../types/EnumAuthReducerActionTypes";
 import { EnumUserRoutes } from "../../../types/EnumRoutes";
 import Notifications from "./Notifications";
+import { logout } from "../../../utilities/generalHelperFunctions";
 
 export default function NavBar() {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
@@ -145,7 +144,7 @@ export default function NavBar() {
                                 ) : (
                                     <div className="ps-5 py-3">
                                         <div>
-                                            <button className="dark:text-dark-text" onClick={() => { setShowMobileMenu(false); logout();}}>Logout</button>
+                                            <button className="dark:text-dark-text" onClick={() => { setShowMobileMenu(false); logout(authContext);}}>Logout</button>
                                         </div>
                                     </div>
                                 ) }
@@ -157,14 +156,4 @@ export default function NavBar() {
         </nav>
     );
 
-    async function logout() {
-        try {
-            const response = await axios.post("/users/logout");
-            console.log(response);
-            authContext.dispatch({ type: EnumAuthReducerActionTypes.Logout });
-            history.pushState(null, "", "/");
-        } catch (error) {
-            console.log(error);
-        }
-    }
 }
