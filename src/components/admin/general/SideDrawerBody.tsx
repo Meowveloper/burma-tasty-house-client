@@ -8,8 +8,6 @@ import {
 } from "react-icons/hi";
 import { EnumAdminRoutes, EnumUserRoutes } from "../../../types/EnumRoutes";
 import SideDrawerMenuItem from "./SideDrawerMenuItem";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
 
 interface IProps {
     isOpen : boolean;
