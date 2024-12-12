@@ -1,6 +1,8 @@
 import axios from "./axios";
 import IRecipe from "../types/IRecipe";
 import IUser from "../types/IUser";
+import { AuthContextType } from "../contexts/AuthContext";
+import EnumAuthReducerActionTypes from "../types/EnumAuthReducerActionTypes";
 export async function deleteRecipeInBackend(id: string): Promise<void> {
     try {
         const isConfirm = window.confirm("Are you sure you want to delete this recipe?");
@@ -34,8 +36,19 @@ export function deleteRecipeInBackendAndRemoveRecipeFromStates(recipeId: IRecipe
         }
     };
 }
-export function getAvatarUrl (avatar : IUser["avatar"]) : string {
+export function getAvatarUrl(avatar: IUser["avatar"]): string {
     if (!avatar) return "/image-placeholder.jpg";
     if (typeof avatar === "string") return avatar;
     return URL.createObjectURL(avatar);
+}
+
+export async function logout(authContext: AuthContextType) {
+    try {
+        const response = await axios.post("/users/logout");
+        console.log(response);
+        authContext.dispatch({ type: EnumAuthReducerActionTypes.Logout });
+        history.pushState(null, "", "/");
+    } catch (error) {
+        console.log(error);
+    }
 }
