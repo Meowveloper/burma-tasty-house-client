@@ -5,7 +5,7 @@ export default function AdminLayout() {
   return (
     <div>
         <AdminNavBar></AdminNavBar>
-        <main className='pt-4 px-3 tablet:px-7 desktop:px-10'>
+        <main className='pt-4 px-3 tablet:px-7 desktop:px-[100px]'>
             <Outlet/> 
         </main>
     </div>
