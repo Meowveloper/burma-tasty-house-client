@@ -17,7 +17,7 @@ export default function AdminNavBar() {
 
   return (
     <>
-      <div className="flex items-center justify-between w-full border-b border-dark-border py-5 px-3 tablet:px-7 desktop:px-10">
+      <div className="flex items-center justify-between w-full border-b border-dark-border py-5 px-3 tablet:px-7 desktop:px-[100px]">
         <Button onClick={() => setIsOpen(true)} color="dark">
             <FiMenu></FiMenu>
         </Button>
