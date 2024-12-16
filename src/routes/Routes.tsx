@@ -22,12 +22,13 @@ import UserProfileEdit from "../pages/user/ProfileEdit";
 import Browse from "../pages/user/Browse";
 import UnProtectedRoutes from "../components/general/UnProtectedRoutes";
 import AdminReports from "../pages/admin/Reports";
+import AdminReportDetail from "../pages/admin/ReportDetail";
 
-const recipeSorts : { [K in keyof Partial<IRecipe>] : K } = {
-    createdAt : 'createdAt',
-    views : 'views',
-    comments : 'comments'
-}
+const recipeSorts: { [K in keyof Partial<IRecipe>]: K } = {
+    createdAt: "createdAt",
+    views: "views",
+    comments: "comments",
+};
 export default function Routes() {
     const routes = createBrowserRouter([
         {
@@ -43,68 +44,68 @@ export default function Routes() {
                     ),
                 },
                 {
-                    path : `${EnumUserRoutes.LatestRecipes}/:page`,
-                    element : (
+                    path: `${EnumUserRoutes.LatestRecipes}/:page`,
+                    element: (
                         <UnProtectedRoutes>
-                            <UserRecipesWithPagination sort={recipeSorts.createdAt!} needAuth={false}/>
+                            <UserRecipesWithPagination sort={recipeSorts.createdAt!} needAuth={false} />
                         </UnProtectedRoutes>
-                    )
+                    ),
                 },
                 {
-                    path : `${EnumUserRoutes.HighestViewRecipes}/:page`,
-                    element : (
+                    path: `${EnumUserRoutes.HighestViewRecipes}/:page`,
+                    element: (
                         <UnProtectedRoutes>
-                            <UserRecipesWithPagination sort={recipeSorts.views!} needAuth={false}/>
+                            <UserRecipesWithPagination sort={recipeSorts.views!} needAuth={false} />
                         </UnProtectedRoutes>
-                    )
+                    ),
                 },
                 {
-                    path : `${EnumUserRoutes.HighestCommentRecipes}/:page`,
-                    element : (
+                    path: `${EnumUserRoutes.HighestCommentRecipes}/:page`,
+                    element: (
                         <UnProtectedRoutes>
-                            <UserRecipesWithPagination sort={recipeSorts.comments!} needAuth={false}/>
+                            <UserRecipesWithPagination sort={recipeSorts.comments!} needAuth={false} />
                         </UnProtectedRoutes>
-                    )
+                    ),
                 },
                 {
-                    path : `${EnumUserRoutes.Browse}/:page`,
-                    element : (
+                    path: `${EnumUserRoutes.Browse}/:page`,
+                    element: (
                         <UnProtectedRoutes>
                             <Browse sort={recipeSorts.createdAt!}></Browse>
                         </UnProtectedRoutes>
-                    )
+                    ),
                 },
                 {
-                    path : `${EnumUserRoutes.PeopleYouFollowRecipes}/:page`,
-                    element : (
+                    path: `${EnumUserRoutes.PeopleYouFollowRecipes}/:page`,
+                    element: (
                         <ProtectedRoutes>
-                            <UserRecipesWithPagination sort={recipeSorts.createdAt!} needAuth={true}/>
+                            <UserRecipesWithPagination sort={recipeSorts.createdAt!} needAuth={true} />
                         </ProtectedRoutes>
-                    )
+                    ),
                 },
                 {
-                    path : `${EnumUserRoutes.SavedRecipes}`, 
-                    element : (
+                    path: `${EnumUserRoutes.SavedRecipes}`,
+                    element: (
                         <ProtectedRoutes>
                             <SavedRecipes></SavedRecipes>
                         </ProtectedRoutes>
-                    ) 
+                    ),
                 },
                 {
-                    path: EnumUserRoutes.PeopleYouFollowed, 
+                    path: EnumUserRoutes.PeopleYouFollowed,
                     element: (
                         <ProtectedRoutes>
                             <PeopleYouFollowed></PeopleYouFollowed>
                         </ProtectedRoutes>
-                    )
-                }, 
+                    ),
+                },
                 {
-                    path: EnumUserRoutes.YourFollowers, 
+                    path: EnumUserRoutes.YourFollowers,
                     element: (
                         <ProtectedRoutes>
                             <YourFollowers></YourFollowers>
                         </ProtectedRoutes>
-                    )
+                    ),
                 },
                 {
                     path: EnumUserRoutes.RecipeCreate,
@@ -128,7 +129,7 @@ export default function Routes() {
                                 </TagsToDeleteContextProvider>
                             </StepsToDeleteContextProvider>
                         </ProtectedRoutes>
-                    )
+                    ),
                 },
                 {
                     path: `${EnumUserRoutes.Profile}/:id`,
@@ -139,12 +140,12 @@ export default function Routes() {
                     ),
                 },
                 {
-                    path: EnumUserRoutes.ProfileEdit, 
+                    path: EnumUserRoutes.ProfileEdit,
                     element: (
                         <ProtectedRoutes>
                             <UserProfileEdit></UserProfileEdit>
                         </ProtectedRoutes>
-                    )
+                    ),
                 },
                 {
                     path: "*",
@@ -169,12 +170,20 @@ export default function Routes() {
                     ),
                 },
                 {
-                    path : EnumAdminRoutes.Reports, 
-                    element : (
+                    path: EnumAdminRoutes.Reports,
+                    element: (
                         <ProtectedRoutes isAdminRoute={true}>
                             <AdminReports></AdminReports>
                         </ProtectedRoutes>
-                    )
+                    ),
+                },
+                {
+                    path: EnumAdminRoutes.ReportDetail_WithId,
+                    element: (
+                        <ProtectedRoutes isAdminRoute={true}>
+                            <AdminReportDetail></AdminReportDetail>
+                        </ProtectedRoutes>
+                    ),
                 },
                 {
                     path: "*",

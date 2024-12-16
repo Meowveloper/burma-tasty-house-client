@@ -27,7 +27,7 @@ export default function AdminReports() {
                         ) : (
                             <>
                                 <MainTableRow reason={example_reason_string} recipe_title="Recipe Title" comment_body="Comment Body" report_id="12345"></MainTableRow>
-                                <MainTableRow reason="Spam" recipe_title="Recipe Title" comment_body="Comment Body" report_id="12345"></MainTableRow>
+                                <MainTableRow reason="Spam" recipe_title="Recipe Title" report_id="12345"></MainTableRow>
                                 <MainTableRow reason="Spam" recipe_title="Recipe Title" comment_body="Comment Body" report_id="12345"></MainTableRow>
                             </>
                         )}
