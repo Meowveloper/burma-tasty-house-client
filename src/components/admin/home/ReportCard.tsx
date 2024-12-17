@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { EnumAdminRoutes } from "../../../types/EnumRoutes";
 interface IProps {
     recipe_id : IRecipe["_id"];
-    comment_id? : IComment["_id"];
+    comment_id? : IComment["_id"] | null;
     recipe_title : IRecipe["title"];
-    comment_body? : IComment["body"]; 
+    comment_body? : IComment["body"] | null; 
     report_body : string;
     report_id : string;
 }

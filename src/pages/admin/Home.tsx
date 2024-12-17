@@ -6,6 +6,7 @@ import { EnumAdminRoutes } from "../../types/EnumRoutes";
 import { CarouselComponent } from "../../components/admin/home/Carousel";
 import axios from '../../utilities/axios';
 import React, { useState, useMemo, useEffect } from "react";
+import IReport from "../../types/IReport";
 
 
 interface IStatistics {
@@ -24,14 +25,19 @@ export default function AdminHome() {
   const [ carouselLoading, setCarouselLoading ] = useState<boolean>(false);
   const [ carouselImages, setCarouselImages ] = useState<Array<string | undefined>>([]);
 
+  const [ latestReportsLoading, setLatestReportsLoading ] = useState<boolean>(false);
+  const [ latestReports, setLatestReports ] = useState<IReport[]>([]);
+
   const fetchStatistics = useMemo(() => getFetchStatisticsFunction(setStatisticsLoading, setStatistics), []);
   const fetchCarouselImages = useMemo(() => getFetchCarouselImagesFunction(setCarouselLoading, setCarouselImages), []);
+  const fetchLatestReports = useMemo(() => getFetchLatestReportsFunction(setLatestReports, setLatestReportsLoading), []);
 
   useEffect(() => {
     console.log("checking infinite loop from pages/admin/Home.tsx");
     fetchStatistics();
     fetchCarouselImages();
-  }, [fetchStatistics, fetchCarouselImages]);
+    fetchLatestReports();
+  }, [fetchStatistics, fetchCarouselImages, fetchLatestReports]);
     return (
         <div>
             <div className="text-h1 font-bold mb-6">Command Center of Burma Tasty House Admins</div>
@@ -63,9 +69,21 @@ export default function AdminHome() {
                   <Badge size="sm" onClick={() => navigate(EnumAdminRoutes.Reports)} color="warning">See All Reports</Badge>
                 </div>
                 <div className="mb-6 grid justify-items-center gap-4 grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3">
-                  <ReportCard recipe_id="12345" comment_id="12345" recipe_title="Recipe Title" comment_body="Comment Body" report_body="Report Body" report_id="12345" />
-                  <ReportCard recipe_id="12345" comment_id="12345" recipe_title="Recipe Title" comment_body="Comment Body" report_body="Report Body" report_id="12345" />
-                  <ReportCard recipe_id="12345" comment_id="12345" recipe_title="Recipe Title" comment_body="Comment Body" report_body="Report Body" report_id="12345" />
+                  { !latestReportsLoading ? (
+                  <>
+                    {latestReports.map((item: IReport) => (
+                      <ReportCard
+                        recipe_id={getIdOrString(item.recipe)}
+                        comment_id={getIdOrNull(item.comment)}
+                        recipe_title={item.recipe ? (typeof item.recipe !== 'string' ? item.recipe.title : "") : ""}
+                        comment_body={item.comment ? (typeof item.comment !== 'string' ? item.comment.body : "") : ""}
+                        report_body={item.body}
+                        report_id={getIdOrString(item)}
+                        key={item._id}
+                      />
+                    ))}
+                  </>
+                  ) : (<div>Loading.....</div>) }
                 </div>
             </div>
         </div>
@@ -100,5 +118,30 @@ function getFetchCarouselImagesFunction(setCarouselLoading : React.Dispatch<Reac
       setCarouselLoading(false);
     }
   }
+}
+
+function getFetchLatestReportsFunction (setLatestReports : React.Dispatch<React.SetStateAction<IReport[]>>, setLatestReportsLoading : React.Dispatch<React.SetStateAction<boolean>>) {
+  return async function () {
+    try {
+      setLatestReportsLoading(true);
+      const res = await axios.get("/admin/reports/with_pagination?page=1&limit=5");
+      console.log(res);
+      setLatestReports(res.data.data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLatestReportsLoading(false);
+    }
+  }
+}
+
+
+function getIdOrNull  (item : IReport["recipe"] | IReport["comment"]) : string | null {
+  if (typeof item === 'string') return item;
+  return item?._id ? item._id : null;
+}
+function getIdOrString  (item : IReport["recipe"] | IReport["comment"] | IReport) : string {
+  if (typeof item === 'string') return item;
+  return item?._id ? item._id : "";
 }
 
