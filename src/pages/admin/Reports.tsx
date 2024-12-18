@@ -1,11 +1,20 @@
 import { Table, Pagination } from "flowbite-react";
 import MainTableRow from "../../components/admin/reports/MainTableRow";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
+import IReport from "../../types/IReport";
+import axios from '../../utilities/axios';
+import IPagination from "../../types/IPagination";
 export default function AdminReports() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
-    console.log("set loading", setLoading);
-    const example_reason_string = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam laboriosam et necessitatibus distinctio voluptatibus nihil debitis, sint optio voluptates deleniti facere suscipit non ex ducimus, minus accusamus adipisci maxime itaque.";
+    const [ reports , setReports ] = useState<IReport[]>([]);
+    const [ pagination, setPagination ] = useState<IPagination | null>(null);
+    const fetchReports = useMemo(() => getFetchReportsFunction(setReports, setLoading, setPagination), []);
+
+    useEffect(() => {
+        console.log("checking infinite loop from pages/admin/Reports.tsx");
+        fetchReports(currentPage);
+    }, [fetchReports, currentPage]);
     return (
         <div>
             <div className="text-h1 font-bold mb-6"></div>
@@ -25,21 +34,41 @@ export default function AdminReports() {
                                 </Table.Cell>
                             </Table.Row>
                         ) : (
-                            <>
-                                <MainTableRow reason={example_reason_string} recipe_title="Recipe Title" comment_body="Comment Body" report_id="12345"></MainTableRow>
-                                <MainTableRow reason="Spam" recipe_title="Recipe Title" report_id="12345"></MainTableRow>
-                                <MainTableRow reason="Spam" recipe_title="Recipe Title" comment_body="Comment Body" report_id="12345"></MainTableRow>
-                            </>
+                            !!reports.length && reports.map((report : IReport) => (
+                                <MainTableRow
+                                    key={report._id}
+                                    reason={report.body}
+                                    recipe_title={report.recipe && typeof report.recipe === "object" ? report.recipe.title : ""}
+                                    report_id={report._id ? report._id : ""}
+                                ></MainTableRow>
+                            ))
                         )}
                     </Table.Body>
                 </Table>
             </div>
-            <div className="flex overflow-x-auto sm:justify-center">
-                <Pagination currentPage={currentPage} totalPages={100} onPageChange={onPageChange} showIcons />
-            </div>
+            { !!pagination && (
+                <div className="flex overflow-x-auto sm:justify-center">
+                    <Pagination currentPage={currentPage} totalPages={pagination.totalPages} onPageChange={onPageChange} showIcons />
+                </div>
+            )}
         </div>
     );
     function onPageChange(page: number) {
         setCurrentPage(page);
     }
+}
+function getFetchReportsFunction (setLatestReports : React.Dispatch<React.SetStateAction<IReport[]>>, setLatestReportsLoading : React.Dispatch<React.SetStateAction<boolean>>, setPagination : React.Dispatch<React.SetStateAction<IPagination | null>>) {
+  return async function (page : number) {
+    try {
+      setLatestReportsLoading(true);
+      const res = await axios.get(`/admin/reports/with_pagination?page=${page}&limit=5`);
+      console.log(res);
+      setLatestReports(res.data.data);
+      setPagination(res.data.pagination);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLatestReportsLoading(false);
+    }
+  }
 }
