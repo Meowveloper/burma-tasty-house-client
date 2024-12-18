@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { EnumUserRoutes } from "../../../types/EnumRoutes";
-import Notifications from "./Notifications";
 import { logout } from "../../../utilities/generalHelperFunctions";
 
 export default function NavBar() {
@@ -17,7 +16,6 @@ export default function NavBar() {
                     <span className="self-center text-logo font-semibold whitespace-nowrap dark:text-dark-text-highlight">Logo</span>
                 </NavLink>
                 <div className="flex items-center justify-start gap-2">
-                    <Notifications></Notifications>
                     <button onClick={() => setShowMobileMenu(prev => !prev)} type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded={showMobileMenu}>
                         <span className="sr-only">Open main menu</span>
                         <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">

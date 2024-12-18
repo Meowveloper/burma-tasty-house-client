@@ -31,7 +31,7 @@ export default function ReportDetailRecipe() {
                     <Accordion.Panel>
                         <Accordion.Title>ID</Accordion.Title>
                         <Accordion.Content>
-                            <span className="text-white font-bold">{recipe}</span>
+                            <span className="text-white font-bold">recipe deleted</span>
                         </Accordion.Content>
                     </Accordion.Panel>
                     {/* _id end */}
@@ -49,7 +49,7 @@ export default function ReportDetailRecipe() {
                     <Accordion.Panel>
                         <Accordion.Title>ID</Accordion.Title>
                         <Accordion.Content>
-                            <span className="text-white font-bold">{recipe._id}</span>
+                            <span className="text-white font-bold">{recipe._id || "Recipe Deleted"}</span>
                         </Accordion.Content>
                     </Accordion.Panel>
                     {/* _id end */}

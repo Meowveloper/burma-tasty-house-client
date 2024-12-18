@@ -11,6 +11,8 @@ import IReport from "../../types/IReport";
 
 export interface IReportDetailContext {
     report: IReport | null;
+    change_comment_from_object_to_id: () => void;
+    change_recipe_from_object_to_id: () => void;
 }
 export const ReportDetailContext = createContext<IReportDetailContext>({} as IReportDetailContext);
 
@@ -29,7 +31,7 @@ export default function AdminReportDetail() {
         fetchReport(report_id);
     }, [report_id, fetchReport]);
     return (
-        <ReportDetailContext.Provider value={{ report: report }}>
+        <ReportDetailContext.Provider value={{ report, change_comment_from_object_to_id, change_recipe_from_object_to_id }}>
             <div>
                 <div className="text-h2 font-bold mb-4">Report Detail</div>
                 { loading || !report ? (
@@ -75,6 +77,26 @@ export default function AdminReportDetail() {
             </div>
         </ReportDetailContext.Provider>
     );
+
+    function change_comment_from_object_to_id() {
+        setReport(prev => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                comment: prev.comment ? (typeof prev.comment === "string" ? prev.comment : prev.comment._id) : null
+            } as IReport;
+        })
+    }
+
+    function change_recipe_from_object_to_id() {
+        setReport(prev => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                recipe: prev.recipe ? (typeof prev.recipe === "string" ? prev.recipe : prev.recipe._id) : null
+            } as IReport;
+        })
+    }
 }
 
 function handleAlertDismiss(setShowAlert: React.Dispatch<React.SetStateAction<boolean>>) {
@@ -84,9 +106,7 @@ function handleAlertDismiss(setShowAlert: React.Dispatch<React.SetStateAction<bo
 }
 
 function calculate_if_comment_report(report: IReport | null) : boolean {
-    if(!report || !report.comment) return false;
-    if(typeof report.comment === "string") return true;
-    else return ('_id' in report.comment);
+    return report?.is_comment_report ? true : false;
 }
 
 function getFetchReportFunction(setReport: React.Dispatch<React.SetStateAction<IReport | null>>, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {

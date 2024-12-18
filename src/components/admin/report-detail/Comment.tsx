@@ -12,7 +12,7 @@ export default function ReportDetailComment() {
                     Reported Comment
                 </Accordion.Title>
                 <Accordion.Content>
-                    <span className="text-white font-bold">This is not a comment report</span>
+                    <span className="text-white font-bold">Comment deleted or this is not a comment report</span>
                 </Accordion.Content>
             </>
         );
@@ -22,7 +22,7 @@ export default function ReportDetailComment() {
                 Reported Comment
             </Accordion.Title>
             <Accordion.Content>
-                <span className="text-white font-bold">{typeof comment === "string" ? comment : comment.body}</span>
+                <span className="text-white font-bold">{typeof comment === "string" ? 'comment deleted or this is not a comment report' : comment.body}</span>
             </Accordion.Content>
         </>
     )
