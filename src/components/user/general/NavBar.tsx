@@ -13,7 +13,7 @@ export default function NavBar() {
         <nav className="bg-white dark:bg-[#1E1F22] relative">
             <div className="w-full flex flex-wrap items-center justify-between px-4 py-5 tablet:px-10 desktop:px-[100px]">
                 <NavLink to={EnumUserRoutes.Home} onClick={() => setShowMobileMenu(false)} className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <span className="self-center text-logo font-semibold whitespace-nowrap dark:text-dark-text-highlight">Logo</span>
+                    <img src="/logo.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
                 </NavLink>
                 <div className="flex items-center justify-start gap-2">
                     <button onClick={() => setShowMobileMenu(prev => !prev)} type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded={showMobileMenu}>
